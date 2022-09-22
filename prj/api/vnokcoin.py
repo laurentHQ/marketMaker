@@ -155,7 +155,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def connect(self, host, apiKey, secretKey, trace=False):
-		""Connection Server"
+		""Connection Server""
 		self. host = host
 		self. apiKey = apiKey
 		self. secretKey = secretKey
@@ -178,7 +178,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def reconnect(self):
-		""Reconnect"
+		""Reconnect""
 		# Close the previous connection first
 		self. close()
 
@@ -219,7 +219,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def sendTradingRequest(self, channel, params):
-		"Send a trade request""
+		""Send a trade request""
 		# Add api_key and signature fields to the parameter dictionary
 		params['api_key'] = self. apiKey
 		params['sign'] = self. generateSign(params)
