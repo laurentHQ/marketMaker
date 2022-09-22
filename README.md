@@ -1,39 +1,32 @@
-# marketMaker
-接入okcoin的数字货币行情，并在众安交易所做市
+Access okcoin's digital currency quotes and make market making on the ZhongAn exchange
 
-> 作者：吴典（Andy.Woo） @上海 手机/微信:18621528717
->
+Author: Wu Dian (Andy.Woo) @Shanghai Mobile/WeChat: 18621528717
 
-
-
-# 项目简介
-
-一.代码结构
+Project Introduction
+One. Code structure
 
 1.api
 
-通过websocket协议从okcoin接入okcoin柜台上数字货币的tick行情，通过rest协议从众安交易所读写数字货币的行情
+Access the tick quotes of digital currency on the okcoin counter from okcoin through the websocket protocol, and read and write the quotes of digital currency from the ZhongAn exchange through the rest protocol
 
 2.dataRecorder
 
-基于api接口，将okcoin获取的数字货币的tick转为自定义结构，并实时存入mongoDB数据库中
+Based on the API interface, the tick of the digital currency obtained by okcoin is converted into a custom structure and stored in the mongoDB database in real time
 
-3.gateway网关
+3. Gateway
 
-将外部获取的行情结构转为自定义结构
+Convert externally acquired market structures into custom structures
 
 4.strategy
 
-包含了自定义数据结构在系统内部的流转过程以及做市商策略
+Contains custom data structures within the system flow process and market maker strategy
 
-4.1.MMBase 定了tick和bar等数据结构
+4.1. MMBase defines data structures such as tick and bar
 
-4.2.MMEngine 实现了CTA策略引擎，针对CTA类型的策略，抽象简化了部分底层接口的功能
+4.2.MMEngine implements the CTA policy engine, which abstracts and simplifies the functions of some of the underlying interfaces for CTA type policies
 
-4.3.MMTemplate 包含了CTA引擎中的策略开发用模板，开发策略时需要继承CtaTemplate类
+4.3. MMTemplate contains templates for policy development in the CTA engine, and the CtaTemplate class needs to be inherited when developing policies
 
-4.4.MMStrategy 做市商策略 （内容详见doc/做市商策略.txt）
+4.4. MMStrategy Market Maker Strategy (see doc/Market Maker Strategy .txt for details)
 
-4.5.vtMMClient 主引擎 and 程序切入口
-
-
+4.5.vtMMClient Main Engine and Program Entry
