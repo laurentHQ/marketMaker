@@ -1,70 +1,67 @@
 # encoding: UTF-8
 
 '''
-本文件仅用于存放对于事件类型常量的定义。
-
-由于python中不存在真正的常量概念，因此选择使用全大写的变量名来代替常量。
-这里设计的命名规则以EVENT_前缀开头。
-
-常量的内容通常选择一个能够代表真实意义的字符串（便于理解）。
-
-建议将所有的常量定义放在该文件中，便于检查是否存在重复的现象。
+This file is for the definition of event type constants only.
+Since there is no real concept of constants in python, it is chosen to use all capitalized variable names instead of constants.
+The naming convention designed here begins with a EVENT_ prefix.
+The contents of a constant typically choose a string that represents the true meaning (easy to understand).
+It is recommended that you place all constant definitions in this file to check for duplication.
 '''
 
-# 系统相关
-EVENT_TIMER = 'eTimer'                  # 计时器事件，每隔1秒发送一次
-EVENT_LOG = 'eLog'                      # 日志事件，全局通用
+# System dependent
+EVENT_TIMER = 'eTimer' # timer event, sent every 1 second
+EVENT_LOG = 'eLog' # log event, global common
 
-# Gateway相关
-EVENT_TICK = 'eTick.'                   # TICK行情事件，可后接具体的vtSymbol
+# Gateway related
+EVENT_TICK = 'eTick.' # TICK market event, followed by specific vtSymbol
 EVENT_CANDLE = 'eCandle'
 
-EVENT_TRADE = 'eTrade.'                 # 成交回报事件
-EVENT_ORDER = 'eOrder.'                 # 报单回报事件
-EVENT_POSITION = 'ePosition.'           # 持仓回报事件
-EVENT_ACCOUNT = 'eAccount.'             # 账户回报事件
-EVENT_CONTRACT = 'eContract.'           # 合约基础信息回报事件
-EVENT_ERROR = 'eError.'                 # 错误回报事件
+EVENT_TRADE = 'eTrade.' # Deal Return Event
+EVENT_ORDER = 'eOrder.' # Reporting Event
+EVENT_POSITION = 'ePosition.' # Position Return Event
+EVENT_ACCOUNT = 'eAccount.' # Account Returns Event
+EVENT_CONTRACT = 'eContract.' # Contract Base Information Reward Event
+EVENT_ERROR = 'eError.' # Error Reward Event
 
-# CTA模块相关
-EVENT_CTA_LOG = 'eCtaLog'               # CTA相关的日志事件
-EVENT_CTA_STRATEGY = 'eCtaStrategy.'    # CTA策略状态变化事件
+# CTA module related
+EVENT_CTA_LOG = 'eCtaLog' # CTA-related log event
+EVENT_CTA_STRATEGY = 'eCtaStrategy.' # CTA Policy State Change Event
 
-# HF模块相关
-EVENT_HF_LOG = 'eHfLog'               # HF相关的日志事件
-EVENT_HF_STRATEGY = 'eHfStrategy.'    # HF策略状态变化事件
+# HF module related
+EVENT_HF_LOG = 'eHfLog' # HF-related log event
+EVENT_HF_STRATEGY = 'eHfStrategy.' # HF Policy State Change Event
 
-# 行情记录模块相关
-EVENT_DATARECORDER_LOG = 'eDataRecorderLog' # 行情记录日志更新事件
+# Quotes record module related
+EVENT_DATARECORDER_LOG = 'eDataRecorderLog' # Market Logging Update Event
 
-# Wind接口相关
-EVENT_WIND_CONNECTREQ = 'eWindConnectReq'   # Wind接口请求连接事件
+# Wind interface related
+EVENT_WIND_CONNECTREQ = 'eWindConnectReq' # Wind interface request connection event
 
 
 #----------------------------------------------------------------------
 def test():
-    """检查是否存在内容重复的常量定义"""
+    """Check for the presence of duplicate content constant definitions"""
     check_dict = {}
     
     global_dict = globals()    
     
-    for key, value in global_dict.items():
-        if '__' not in key:                       # 不检查python内置对象
+    for key, value in global_dict. items():
+        If '__' not in key: # does not check python built-in objects 
             if value in check_dict:
-                check_dict[value].append(key)
+                check_dict[value]. append(key)
             else:
                 check_dict[value] = [key]
             
-    for key, value in check_dict.items():
+    for key, value in check_dict. items():
         if len(value)>1:
-            print u'存在重复的常量定义:' + str(key) 
+            print u' has a duplicate constant definition: ' + str(key) 
             for name in value:
                 print name
             print ''
         
-    print u'测试完毕'
+    print u'Test Complete'
     
 
-# 直接运行脚本可以进行测试
+# Run the script directly to test
 if __name__ == '__main__':
     test()
