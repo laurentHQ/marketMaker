@@ -1,50 +1,50 @@
 # encoding: UTF-8
 
-# 系统模块
+# System modules
 from Queue import Queue, Empty
 from threading import Thread, Condition
 from time import sleep
 from collections import defaultdict
 
-# 第三方模块
-from PyQt4.QtCore import QTimer
+# Third-party modules
+from PyQt4. QtCore import QTimer
 
-# 自己开发的模块
+# Self-developed modules
 from eventType import *
 
 
 ########################################################################
 class EventEngine(object):
     """
-    事件驱动引擎
-    事件驱动引擎中所有的变量都设置为了私有，这是为了防止不小心
-    从外部修改了这些变量的值或状态，导致bug。
+ Event-driven engine
+ All variables in the event-driven engine are set to private, which is to prevent carelessness
+ The value or state of these variables was modified from the outside, causing a bug.
     
-    变量说明
-    __queue：私有变量，事件队列
-    __active：私有变量，事件引擎开关
-    __thread：私有变量，事件处理线程
-    __timer：私有变量，计时器
-    __handlers：私有变量，事件处理函数字典
+ The variable description
+ __queue: Private variables, event queues
+ __active: private variables, event engine switches
+ __thread: Private variables, event processing threads
+ __timer: private variables, timers
+ __handlers: Private variables, dictionary of event handlers
     
     
-    方法说明
-    __run: 私有方法，事件处理线程连续运行用
-    __process: 私有方法，处理事件，调用注册在引擎中的监听函数
-    __onTimer：私有方法，计时器固定事件间隔触发后，向事件队列中存入计时器事件
-    start: 公共方法，启动引擎
-    stop：公共方法，停止引擎
-    register：公共方法，向引擎中注册监听函数
-    unregister：公共方法，向引擎中注销监听函数
-    put：公共方法，向事件队列中存入新的事件
+ Method description
+ __run: A private method that runs continuously with an event-handling thread
+ __process: A private method that processes events, calls a listening function registered in the engine
+ __onTimer: A private method that stores timer events into the event queue after a fixed event interval is triggered
+ start: Public method to start the engine
+ stop: Public method, stops the engine
+ register: A public method that registers a listening function with the engine
+ unregister: A public method that unregisters the listening function from the engine
+ put: A public method that stores a new event to the event queue
     
-    事件监听函数必须定义为输入参数仅为一个event对象，即：
+ The event listening function must be defined as an input parameter that is only an event object, i.e.:
     
-    函数
+ function
     def func(event)
         ...
     
-    对象方法
+ Object methods
     def method(self, event)
         ...
         
@@ -52,146 +52,146 @@ class EventEngine(object):
 
     #----------------------------------------------------------------------
     def __init__(self):
-        """初始化事件引擎"""
-        # 事件队列
-        self.__queue = Queue()
+        """Initialize Event Engine"""
+        # Event queue
+        self. __queue = Queue()
         
-        # 事件引擎开关
-        self.__active = False
+        # Event engine switch
+        self. __active = False
         
-        # 事件处理线程
-        self.__thread = Thread(target = self.__run)
+        # Event processing thread
+        self. __thread = Thread(target = self. __run)
         
-        # 计时器，用于触发计时器事件
-        self.__timer = QTimer()
-        self.__timer.timeout.connect(self.__onTimer)
+        # Timer, which triggers a timer event
+        self. __timer = QTimer()
+        self. __timer. timeout. connect(self. __onTimer)
         
-        # 这里的__handlers是一个字典，用来保存对应的事件调用关系
-        # 其中每个键对应的值是一个列表，列表中保存了对该事件进行监听的函数功能
-        self.__handlers = defaultdict(list)
+        # The __handlers here is a dictionary that holds the corresponding event call relationships
+        # The value corresponding to each key is a list of functions that hold the function of listening for the event
+        self. __handlers = defaultdict(list)
         
     #----------------------------------------------------------------------
     def __run(self):
-        """引擎运行"""
-        while self.__active == True:
+        """Engine Run" """
+        while self. __active == True:
             try:
-                event = self.__queue.get(block = True, timeout = 1)  # 获取事件的阻塞时间设为1秒
-                self.__process(event)
+                event = self. __queue. get(block  = True, timeout = 1) # The blocking time for the get event is set to 1 second
+                self. __process(event)
             except Empty:
                 pass
             
     #----------------------------------------------------------------------
     def __process(self, event):
-        """处理事件"""
-        # 检查是否存在对该事件进行监听的处理函数
-        if event.type_ in self.__handlers:
-            # 若存在，则按顺序将事件传递给处理函数执行
-            [handler(event) for handler in self.__handlers[event.type_]]
+        """Handling Events"""
+        # Check if there is a handler that listens for the event
+        if event. type_ in self. __handlers:
+            # If present, events are passed sequentially to handler execution
+            [handler(event) for handler in self. __handlers[event. type_]]
             
-            # 以上语句为Python列表解析方式的写法，对应的常规循环写法为：
+            # The above statement is written in Python list parsing, and the corresponding general loop writing method is:
             #for handler in self.__handlers[event.type_]:
                 #handler(event)    
                
     #----------------------------------------------------------------------
     def __onTimer(self):
-        """向事件队列中存入计时器事件"""
-        # 创建计时器事件
+        """Storing timer events into the event queue """
+        # Create a timer event
         event = Event(type_=EVENT_TIMER)
         
-        # 向队列中存入计时器事件
-        self.put(event)    
+        # Stores timer events to the queue
+        self. put(event)    
 
     #----------------------------------------------------------------------
     def start(self):
-        """引擎启动"""
-        # 将引擎设为启动
-        self.__active = True
+        """Engine start" """
+        # Set the engine to start
+        self. __active = True
         
-        # 启动事件处理线程
-        self.__thread.start()
+        # Start the event processing thread
+        self. __thread. start()
         
-        # 启动计时器，计时器事件间隔默认设定为1秒
-        self.__timer.start(1000)
+        # Start the timer, the timer event interval is set to 1 second by default
+        self. __timer. start(1000)
     
     #----------------------------------------------------------------------
     def stop(self):
-        """停止引擎"""
-        # 将引擎设为停止
-        self.__active = False
+        "Stop Engine"""
+        # Set the engine to stop
+        self. __active = False
         
-        # 停止计时器
-        self.__timer.stop()
+        # Stop the timer
+        self. __timer. stop()
         
-        # 等待事件处理线程退出
-        self.__thread.join()
+        # Wait for the event-processing thread to exit
+        self. __thread. join()
             
     #----------------------------------------------------------------------
     def register(self, type_, handler):
-        """注册事件处理函数监听"""
-        # 尝试获取该事件类型对应的处理函数列表，若无defaultDict会自动创建新的list
-        handlerList = self.__handlers[type_]
+        """Register Event Handler Listening" """
+        # Try to get the list of handlers corresponding to the event type, and if there is no defaultDict, a new list will be created automatically
+        handlerList = self. __handlers[type_]
         
-        # 若要注册的处理器不在该事件的处理器列表中，则注册该事件
+        # To register a processor that is not in the list of handlers for the event, register the event
         if handler not in handlerList:
-            handlerList.append(handler)
+            handlerList. append(handler)
             
     #----------------------------------------------------------------------
     def unregister(self, type_, handler):
-        """注销事件处理函数监听"""
-        # 尝试获取该事件类型对应的处理函数列表，若无则忽略该次注销请求   
-        handlerList = self.__handlers[type_]
+        """Logout event handler listening"""
+        # Try to get a list of handlers for that event type, and ignore the logout request if not 
+        handlerList = self. __handlers[type_]
             
-        # 如果该函数存在于列表中，则移除
+        # If the function exists in the list, remove it
         if handler in handlerList:
-            handlerList.remove(handler)
+            handlerList. remove(handler)
 
-        # 如果函数列表为空，则从引擎中移除该事件类型
+        # If the list of functions is empty, the event type is removed from the engine
         if not handlerList:
-            del self.__handlers[type_]
+            del self. __handlers[type_]
             
     #----------------------------------------------------------------------
     def put(self, event):
-        """向事件队列中存入事件"""
-        self.__queue.put(event)
+        """Deposit event into the event queue """
+        self. __queue. put(event)
 
 
 ########################################################################
 class EventEngine2(object):
     """
-    计时器使用python线程的事件驱动引擎        
+ Timers use the event-driven engine of the python thread 
     """
 
     #----------------------------------------------------------------------
     def __init__(self):
-        """初始化事件引擎"""
-        # 事件队列
-        self.__queue = Queue()
+        """Initialize Event Engine"""
+        # Event queue
+        self. __queue = Queue()
         
-        # 事件引擎开关
-        self.__active = False
+        # Event engine switch
+        self. __active = False
         
-        # 事件处理线程
-        self.__thread = Thread(target = self.__run)
+        # Event processing thread
+        self. __thread = Thread(target = self. __run)
         
-        # 计时器，用于触发计时器事件
-        self.__timer = Thread(target = self.__runTimer)
-        self.__timerActive = False                      # 计时器工作状态
-        self.__timerSleep = 1                           # 计时器触发间隔（默认1秒）
+        # Timer, which triggers a timer event
+        self. __timer = Thread(target = self. __runTimer)
+        self. __timerActive = False # Timer operating status
+        self. __timerSleep = 1# Timer trigger interval (default 1 second).
         
-        # 这里的__handlers是一个字典，用来保存对应的事件调用关系
-        # 其中每个键对应的值是一个列表，列表中保存了对该事件进行监听的函数功能
-        self.__handlers = defaultdict(list)
+        # The __handlers here is a dictionary that holds the corresponding event call relationships
+        # The value corresponding to each key is a list of functions that hold the function of listening for the event
+        self. __handlers = defaultdict(list)
 
-        self.__eventCondition = Condition()
-        self.conditionHalt = 0
+        self. __eventCondition = Condition()
+        self. conditionHalt = 0
 
     #----------------------------------------------------------------------
     def __run(self):
-        """引擎运行"""
-        while self.__active == True:
+        """Engine Run" """
+        while self. __active == True:
             try:
-                event = self.__queue.get(block = True, timeout = 1)  # 获取事件的阻塞时间设为1秒
-                self.__process(event)
+                event = self. __queue. get(block  = True, timeout = 1) # The blocking time for the get event is set to 1 second
+                self. __process(event)
                 # if self.conditionHalt:
                 #     self.__eventHalt()
             except Empty:
@@ -199,137 +199,137 @@ class EventEngine2(object):
             
     #----------------------------------------------------------------------
     def __process(self, event):
-        """处理事件"""
-        # 检查是否存在对该事件进行监听的处理函数
-        if event.type_ in self.__handlers:
-            # 若存在，则按顺序将事件传递给处理函数执行
-            [handler(event) for handler in self.__handlers[event.type_]]
+        """Handling Events"""
+        # Check if there is a handler that listens for the event
+        if event. type_ in self. __handlers:
+            # If present, events are passed sequentially to handler execution
+            [handler(event) for handler in self. __handlers[event. type_]]
             
-            # 以上语句为Python列表解析方式的写法，对应的常规循环写法为：
+            # The above statement is written in Python list parsing, and the corresponding general loop writing method is:
             #for handler in self.__handlers[event.type_]:
                 #handler(event)    
                
     #----------------------------------------------------------------------
     def __runTimer(self):
-        """运行在计时器线程中的循环函数"""
-        while self.__timerActive:
-            # 创建计时器事件
+        """Looping function running in a timer thread" """
+        while self. __timerActive:
+            # Create a timer event
             event = Event(type_=EVENT_TIMER)
         
-            # 向队列中存入计时器事件
-            self.put(event)
-            # 等待
-            sleep(self.__timerSleep)
+            # Stores timer events to the queue
+            self. put(event)
+            # Wait
+            sleep(self. __timerSleep)
 
     #----------------------------------------------------------------------
     def start(self):
-        """引擎启动"""
-        # 将引擎设为启动
-        self.__active = True
+        """Engine start" """
+        # Set the engine to start
+        self. __active = True
         
-        # 启动事件处理线程
-        self.__thread.start()
+        # Start the event processing thread
+        self. __thread. start()
         
-        # 启动计时器，计时器事件间隔默认设定为1秒
-        self.__timerActive = True
-        self.__timer.start()
+        # Start the timer, the timer event interval is set to 1 second by default
+        self. __timerActive = True
+        self. __timer. start()
     
     #----------------------------------------------------------------------
     def stop(self):
-        """停止引擎"""
-        # 将引擎设为停止
-        self.__active = False
+        "Stop Engine"""
+        # Set the engine to stop
+        self. __active = False
         
-        # 停止计时器
-        self.__timerActive = False
-        self.__timer.join()
+        # Stop the timer
+        self. __timerActive = False
+        self. __timer. join()
         
-        # 等待事件处理线程退出
-        self.__thread.join()
+        # Wait for the event-processing thread to exit
+        self. __thread. join()
             
     #----------------------------------------------------------------------
     def register(self, type_, handler):
-        """注册事件处理函数监听"""
-        # 尝试获取该事件类型对应的处理函数列表，若无defaultDict会自动创建新的list
-        handlerList = self.__handlers[type_]
+        """Register Event Handler Listening" """
+        # Try to get the list of handlers corresponding to the event type, and if there is no defaultDict, a new list will be created automatically
+        handlerList = self. __handlers[type_]
         
-        # 若要注册的处理器不在该事件的处理器列表中，则注册该事件
+        # To register a processor that is not in the list of handlers for the event, register the event
         if handler not in handlerList:
-            handlerList.append(handler)
+            handlerList. append(handler)
             
     #----------------------------------------------------------------------
     def unregister(self, type_, handler):
-        """注销事件处理函数监听"""
-        # 尝试获取该事件类型对应的处理函数列表，若无则忽略该次注销请求   
-        handlerList = self.__handlers[type_]
+        """Logout event handler listening"""
+        # Try to get a list of handlers for that event type, and ignore the logout request if not 
+        handlerList = self. __handlers[type_]
             
-        # 如果该函数存在于列表中，则移除
+        # If the function exists in the list, remove it
         if handler in handlerList:
-            handlerList.remove(handler)
+            handlerList. remove(handler)
 
-        # 如果函数列表为空，则从引擎中移除该事件类型
+        # If the list of functions is empty, the event type is removed from the engine
         if not handlerList:
-            del self.__handlers[type_]  
+            del self. __handlers[type_]  
         
     #----------------------------------------------------------------------
     def put(self, event):
-        """向事件队列中存入事件"""
-        self.__queue.put(event)
+        """Deposit event into the event queue """
+        self. __queue. put(event)
 
     #----------------------------------------------------------------------
     def timerHalt(self):
-        self.__timerActive = False
+        self. __timerActive = False
 
     #----------------------------------------------------------------------
     def timerProceed(self):
-        self.__timerActive = True
+        self. __timerActive = True
 
     #----------------------------------------------------------------------
     def __eventHalt(self):
-        # 等待发单回调推送委托号信息
-        self.__eventCondition.acquire()
-        self.__eventCondition.wait()
-        self.__eventCondition.release()
+        # Wait for the single callback to push the delegate number information
+        self. __eventCondition. acquire()
+        self. __eventCondition. wait()
+        self. __eventCondition. release()
 
     #----------------------------------------------------------------------
     def eventProceed(self):
-        # 收到委托号后，通知发送委托的线程返回委托号
-        self.__eventCondition.acquire()
-        self.__eventCondition.notify()
-        self.__eventCondition.release()
+        # When the delegate number is received, the thread that sent the delegate is notified that the delegate number is returned
+        self. __eventCondition. acquire()
+        self. __eventCondition. notify()
+        self. __eventCondition. release()
 
-        self.conditionHalt = 0
+        self. conditionHalt = 0
 
 ########################################################################
 class Event:
-    """事件对象"""
+    """Event Object"""
 
     #----------------------------------------------------------------------
     def __init__(self, type_=None):
         """Constructor"""
-        self.type_ = type_      # 事件类型
-        self.dict_ = {}         # 字典用于保存具体的事件数据
+        self. type_ = type_# Event type
+        self. dict_={}# dictionary is used to hold specific event data
 
 
 #----------------------------------------------------------------------
 def test():
-    """测试函数"""
+    """Test function"""
     import sys
     from datetime import datetime
-    from PyQt4.QtCore import QCoreApplication
+    from PyQt4. QtCore import QCoreApplication
     
     def simpletest(event):
-        print u'处理每秒触发的计时器事件：%s' % str(datetime.now())
+        print u' handles timer events triggered per second: %s' %  str(datetime.). now())
     
-    app = QCoreApplication(sys.argv)
+    app = QCoreApplication(sys. argv)
     
     ee = EventEngine2()
-    ee.register(EVENT_TIMER, simpletest)
-    ee.start()
+    ee. register(EVENT_TIMER, simpletest)
+    ee. start()
     
-    app.exec_()
+    app. exec_()
     
     
-# 直接运行脚本可以进行测试
+# Run the script directly to test
 if __name__ == '__main__':
     test()
