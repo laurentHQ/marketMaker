@@ -8,17 +8,17 @@ EMPTY_FLOAT = 0.0
 
 # Direction constant
 DIRECTION_NONE = u 'no direction'
-DIRECTION_LONG = u'多'
-DIRECTION_SHORT = u'空'
+DIRECTION_LONG = u'buy'
+DIRECTION_SHORT = u'sell'
 DIRECTION_UNKNOWN = u 'Unknown'
-DIRECTION_NET = u'净'
+DIRECTION_NET = u'square'
 DIRECTION_SELL = u'sell' # IB interface
 
 # Open the usual amount
 OFFSET_NONE = u'No opening'
-OFFSET_OPEN = u 'open position'
+OFFSET_OPEN = u 'Open Position'
 OFFSET_CLOSE = u'Close Position'
-OFFSET_CLOSETODAY = u'pingjin'
+OFFSET_CLOSETODAY = u'flat today'
 OFFSET_CLOSEYESTERDAY = u'flat yesterday'
 OFFSET_UNKNOWN = u 'unknown'
 
@@ -88,7 +88,7 @@ CURRENCY_CNY = 'CNY' # RMB
 CURRENCY_UNKNOWN = 'UNKNOWN' # unknown currency
 CURRENCY_NONE = '' # Empty currency
 
-#数字货币代码
+# Currency symbol
 SYMBOL_BTC_CNY = 'BTC_CNY'
 SYMBOL_ETH_CNY = 'ETH_CNY'
 SYMBOL_LTC_CNY = 'LTC_CNY'
