@@ -115,7 +115,7 @@ class ZhcoinApi(object):
 			self. taskThread. join()
 
 	def run(self):
-		"""Continuous operation"
+		"""Continuous operation"""
 		while self. active:
 			try:
 				for sym_exch_tuple in self. symList:
@@ -170,7 +170,7 @@ class ZhcoinApi(object):
 
 		elif method in ['POST', 'PUT']:
 			try:
-				conn = httplib. HTTPConnection(host=self. restDomain. replace("http://","""))
+				conn = httplib. HTTPConnection(host=self. restDomain. replace("http://",""))
 				conn. request(method, path, json. JSONEncoder(). encode(params), self. headers)
 				response = conn. getresponse()
 
