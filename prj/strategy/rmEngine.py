@@ -1,14 +1,14 @@
 # encoding: UTF-8
 
 '''
-本文件中实现了风控引擎，用于提供一系列常用的风控功能：
-1. 委托流控（单位时间内最大允许发出的委托数量）
-2. 总成交限制（每日总成交数量限制）
-3. 单笔委托的委托数量控制
+The risk control engine is implemented in this document to provide a series of commonly used risk control functions:
+1. Delegate flow control (maximum number of orders allowed to be issued per unit time)
+2. Total Deal Limit (Daily Total Deal Limit)
+3. Control the number of orders in a single order
 '''
 
 import json
-import os
+import the
 import platform
 
 from eventEngine import *
@@ -18,230 +18,230 @@ from vtFunction import *
 
 ########################################################################
 class RmEngine(object):
-    """风控引擎"""
+    ""Risk Control Engine"""
     settingFileName = 'RM_setting.json'
-    settingFileName = os.path.join(ROOT_PATH, 'cfg', settingFileName)
+    settingFileName = os. path. join(ROOT_PATH, 'cfg', settingFileName)
     
-    name = u'风控模块'
+    name = u'Risk Control Module'
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine):
         """Constructor"""
-        self.mainEngine = mainEngine
-        self.eventEngine = eventEngine
+        self. mainEngine = mainEngine
+        self. eventEngine = eventEngine
         
-        # 是否启动风控
-        self.active = False
+        # Whether to start risk control
+        self. active = False
         
-        # 流控相关
-        self.orderFlowCount = EMPTY_INT     # 单位时间内委托计数
-        self.orderFlowLimit = EMPTY_INT     # 委托限制
-        self.orderFlowClear = EMPTY_INT     # 计数清空时间（秒）
-        self.orderFlowTimer = EMPTY_INT     # 计数清空时间计时
+        # Flow control related
+        self. orderFlowCount = EMPTY_INT# Delegate count per unit of time
+        self. orderFlowLimit = EMPTY_INT# delegate limit
+        self. orderFlowClear = EMPTY_INT # Count Clearance Time (seconds).
+        self. orderFlowTimer = EMPTY_INT # Count Clearance Time Timing
     
-        # 单笔委托相关
-        self.orderSizeLimit = EMPTY_INT     # 单笔委托最大限制
+        # Single delegate related
+        self. orderSizeLimit = EMPTY_INT # Maximum limit for a single delegate
     
-        # 成交统计相关
-        self.tradeCount = EMPTY_INT         # 当日成交合约数量统计
-        self.tradeLimit = EMPTY_INT         # 当日成交合约数量限制
+        # Deal statistics related
+        self. tradeCount = EMPTY_INT # Statistics on the number of contracts traded on the day
+        self. tradeLimit = EMPTY_INT # Limit on the number of contracts traded on the day
         
-        # 活动合约相关
-        self.workingOrderLimit = EMPTY_INT  # 活动合约最大限制
+        # Event contract related
+        self. workingOrderLimit = EMPTY_INT # Maximum limit for active contracts
 
         # Position Control
-        self.currentPos = EMPTY_INT
-        self.currentPosLimit = EMPTY_INT
+        self. currentPos = EMPTY_INT
+        self. currentPosLimit = EMPTY_INT
         
-        self.loadSetting()
-        self.registerEvent()
+        self. loadSetting()
+        self. registerEvent()
         
     #----------------------------------------------------------------------
     def loadSetting(self):
-        """读取配置"""
-        with open(self.settingFileName) as f:
-            d = json.load(f)
+        "Read Configuration"
+        with open(self. settingFileName) as f:
+            d = json. load(f)
             
-            # 设置风控参数
-            self.active = d['active']
+            # Set risk control parameters
+            self. active = d['active']
             
-            self.orderFlowLimit = d['orderFlowLimit']
-            self.orderFlowClear = d['orderFlowClear']
+            self. orderFlowLimit = d['orderFlowLimit']
+            self. orderFlowClear = d['orderFlowClear']
             
-            self.orderSizeLimit = d['orderSizeLimit']
+            self. orderSizeLimit = d['orderSizeLimit']
             
-            self.tradeLimit = d['tradeLimit']
+            self. tradeLimit = d['tradeLimit']
             
-            self.workingOrderLimit = d['workingOrderLimit']
+            self. workingOrderLimit = d['workingOrderLimit']
 
-            self.currentPosLimit = d['currentPosLimit']
+            self. currentPosLimit = d['currentPosLimit']
         
     #----------------------------------------------------------------------
     def saveSetting(self):
-        """保存风控参数"""
-        with open(self.settingFileName, 'w') as f:
-            # 保存风控参数
+        ""Save risk parameters"""
+        with open(self. settingFileName, 'w') as f:
+            # Save risk control parameters
             d = {}
 
-            d['active'] = self.active
+            d['active'] = self. active
             
-            d['orderFlowLimit'] = self.orderFlowLimit
-            d['orderFlowClear'] = self.orderFlowClear
+            d['orderFlowLimit'] = self. orderFlowLimit
+            d['orderFlowClear'] = self. orderFlowClear
             
-            d['orderSizeLimit'] = self.orderSizeLimit
+            d['orderSizeLimit'] = self. orderSizeLimit
             
-            d['tradeLimit'] = self.tradeLimit
+            d['tradeLimit'] = self. tradeLimit
             
-            d['workingOrderLimit'] = self.workingOrderLimit
+            d['workingOrderLimit'] = self. workingOrderLimit
 
-            d['CurrentPosLimit'] = self.currentPosLimit
+            d['CurrentPosLimit'] = self. currentPosLimit
             
-            # 写入json
-            jsonD = json.dumps(d, indent=4)
-            f.write(jsonD)
+            # Write json
+            jsonD = json. dumps(d, indent=4)
+            f. write(jsonD)
         
     #----------------------------------------------------------------------
     def registerEvent(self):
-        """注册事件监听"""
-        self.eventEngine.register(EVENT_TRADE, self.updateTrade)
-        self.eventEngine.register(EVENT_TIMER, self.updateTimer)
-        self.eventEngine.register(EVENT_POSITION, self.updatePosition)
+        ""Register Event Listening"""
+        self. eventEngine. register(EVENT_TRADE, self. updateTrade)
+        self. eventEngine. register(EVENT_TIMER, self. updateTimer)
+        self. eventEngine. register(EVENT_POSITION, self. updatePosition)
 
     #----------------------------------------------------------------------
     def updateTrade(self, event):
-        """更新成交数据"""
-        trade = event.dict_['data']
-        self.tradeCount += trade.volume
+        ""Update deal data"""
+        trade = event. dict_['data']
+        self. tradeCount += trade. volume
 
     #----------------------------------------------------------------------
     def updatePosition(self, event):
-        """更新成交数据"""
-        pos = event.dict_['data']
-        self.currentPos = pos.position
+        ""Update deal data"""
+        pos = event. dict_['data']
+        self. currentPos = pos. position
         # print 'currentPos: %s' % self.currentPos
     
     #----------------------------------------------------------------------
     def updateTimer(self, event):
-        """更新定时器"""
-        self.orderFlowTimer += 1
+        "Update Timer"""
+        self. orderFlowTimer += 1
         
-        # 如果计时超过了流控清空的时间间隔，则执行清空
-        if self.orderFlowTimer >= self.orderFlowClear:
-            self.orderFlowCount = 0
-            self.orderFlowTimer = 0
+        # If the timing exceeds the time interval for flow control emptying, the clearing is performed
+        if self. orderFlowTimer >= self. orderFlowClear:
+            self. orderFlowCount = 0
+            self. orderFlowTimer = 0
         
     #----------------------------------------------------------------------
     def writeRiskLog(self, content):
-        """快速发出日志事件"""
-        # 发出报警提示音
+        ""Fast Log Event"""
+        # Beep tone
 
-        if platform.uname() == 'Windows':
+        if platform. uname() == 'Windows':
             import winsound
-            winsound.PlaySound("SystemHand", winsound.SND_ASYNC) 
+            winsound. PlaySound("SystemHand", winsound. SND_ASYNC) 
         
-        # 发出日志事件
+        # Log events are emitted
         log = VtLogData()
-        log.logContent = content
-        log.gatewayName = self.name
+        log. logContent = content
+        log. gatewayName = self. name
         event = Event(type_=EVENT_LOG)
-        event.dict_['data'] = log
-        self.eventEngine.put(event)
+        event. dict_['data'] = log
+        self. eventEngine. put(event)
 
     #----------------------------------------------------------------------
     def checkRisk(self, orderReq):
-        """检查风险"""
-        # 如果没有启动风控检查，则直接返回成功
-        if not self.active:
+        ""Check Risk"""
+        # If the risk control check is not started, it will return to success directly
+        if not self. active:
             return True
 
-        if orderReq.offset in [OFFSET_CLOSE, OFFSET_CLOSETODAY, OFFSET_CLOSEYESTERDAY]:
-            volume = -orderReq.volume
+        if orderReq. offset in [OFFSET_CLOSE, OFFSET_CLOSETODAY, OFFSET_CLOSEYESTERDAY]:
+            volume = -orderReq. volume
         else:
-            volume = orderReq.volume
+            volume = orderReq. volume
         # Check the current all position
-        if (self.currentPos + volume) >= self.currentPosLimit:
-            self.writeRiskLog(u'Total Position 数量%s，超过限制%s'
-                              % (self.currentPos, self.currentPosLimit))
+        if (self. currentPos + volume) >= self. currentPosLimit:
+            self. writeRiskLog(u'Total Position %s above limit %s'
+                              % (self. currentPos, self. currentPosLimit))
             return False
 
-        # 检查委托数量
-        if orderReq.volume > self.orderSizeLimit:
-            self.writeRiskLog(u'单笔委托数量%s，超过限制%s' 
-                              %(orderReq.volume, self.orderSizeLimit))
+        # Check the number of delegates
+        if orderReq. volume > self. orderSizeLimit:
+            self. writeRiskLog(u' number of orders per delegate %s, exceeding limit %s' 
+                              %(orderReq. volume, self. orderSizeLimit))
             return False
         
-        # 检查成交合约量
-        if self.tradeCount >= self.tradeLimit:
-            self.writeRiskLog(u'今日总成交合约数量%s，超过限制%s' 
-                              %(self.tradeCount, self.tradeLimit))
+        # Check the contract volume
+        if self. tradeCount >= self. tradeLimit:
+            self. writeRiskLog(u'Total number of contracts traded today%s, exceeding limit %s' 
+                              %(self. tradeCount, self. tradeLimit))
             return False
         
-        # 检查流控
-        if self.orderFlowCount >= self.orderFlowLimit:
-            self.writeRiskLog(u'委托流数量%s，超过限制每%s秒%s' 
-                              %(self.orderFlowCount, self.orderFlowClear, self.orderFlowLimit))
+        # Check the flow control
+        if self. orderFlowCount >= self. orderFlowLimit:
+            self. writeRiskLog(u'number of delegate streams %s, exceeding the limit %s per %s seconds' 
+                              %(self. orderFlowCount, self. orderFlowClear, self. orderFlowLimit))
             return False
         
-        # 检查总活动合约
-        workingOrderCount = len(self.mainEngine.getAllWorkingOrders())
-        if workingOrderCount >= self.workingOrderLimit:
-            self.writeRiskLog(u'当前活动委托数量%s，超过限制%s'
-                              %(workingOrderCount, self.workingOrderLimit))
+        # Check the total active contract
+        workingOrderCount = len(self. mainEngine. getAllWorkingOrders())
+        if workingOrderCount >= self. workingOrderLimit:
+            self. writeRiskLog(u'Current active order number %s, exceeding limit %s'
+                              %(workingOrderCount, self. workingOrderLimit))
             return False
         
-        # 对于通过风控的委托，增加流控计数
-        self.orderFlowCount += 1
+        # For delegates through risk control, increase the flow control count
+        self. orderFlowCount += 1
         
         return True    
     
     #----------------------------------------------------------------------
     def clearOrderFlowCount(self):
-        """清空流控计数"""
-        self.orderFlowCount = 0
-        self.writeRiskLog(u'清空流控计数')
+        ""Empty Flow Count"""
+        self. orderFlowCount = 0
+        self. writeRiskLog(u'Clear Flow Count')
         
     #----------------------------------------------------------------------
     def clearTradeCount(self):
-        """清空成交数量计数"""
-        self.tradeCount = 0
-        self.writeRiskLog(u'清空总成交计数')
+        ""Empty Deal Quantity Count"""
+        self. tradeCount = 0
+        self. writeRiskLog(u'Empty total deal count')
         
     #----------------------------------------------------------------------
     def setOrderFlowLimit(self, n):
-        """设置流控限制"""
-        self.orderFlowLimit = n
+        ""Set Flow Control Limits" ""
+        self. orderFlowLimit = n
         
     #----------------------------------------------------------------------
     def setOrderFlowClear(self, n):
-        """设置流控清空时间"""
-        self.orderFlowClear = n
+        ""Set Flow Control Clearance Time" ""
+        self. orderFlowClear = n
         
     #----------------------------------------------------------------------
     def setOrderSizeLimit(self, n):
-        """设置委托最大限制"""
-        self.orderSizeLimit = n
+        ""Set delegate maximum limit"""
+        self. orderSizeLimit = n
         
     #----------------------------------------------------------------------
     def setTradeLimit(self, n):
-        """设置成交限制"""
-        self.tradeLimit = n
+        ""Set deal limits"""
+        self. tradeLimit = n
         
     #----------------------------------------------------------------------
     def setWorkingOrderLimit(self, n):
-        """设置活动合约限制"""
-        self.workingOrderLimit = n
+        ""Set Activity Contract Limits"""
+        self. workingOrderLimit = n
 
     #----------------------------------------------------------------------
     def setCurrentPosLimit(self, n):
-        """设置活动合约限制"""
-        self.currentPosLimit = n
+        ""Set Activity Contract Limits"""
+        self. currentPosLimit = n
         
     #----------------------------------------------------------------------
     def switchEngineStatus(self):
-        """开关风控引擎"""
-        self.active = not self.active
+        ""Switch risk engine"""
+        self. active = not self. active
         
-        if self.active:
-            self.writeRiskLog(u'风险管理功能启动')
+        if self. active:
+            self. writeRiskLog (u'Risk Management Function Launched')
         else:
-            self.writeRiskLog(u'风险管理功能停止')
+            self. writeRiskLog (u'Risk management function stopped')
