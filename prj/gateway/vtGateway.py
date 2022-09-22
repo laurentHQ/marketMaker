@@ -3,7 +3,7 @@
 import time
 
 import sys
-sys.path.append('../common')
+sys. path. append('.. /common')
 
 from eventEngine import *
 
@@ -12,126 +12,126 @@ from vtConstant import *
 
 ########################################################################
 class VtGateway(object):
-	"""交易接口"""
+	"""Transaction interface"""
 
 	#----------------------------------------------------------------------
 	def __init__(self, eventEngine, gatewayName):
 		"""Constructor"""
-		self.eventEngine = eventEngine
-		self.gatewayName = gatewayName
+		self. eventEngine = eventEngine
+		self. gatewayName = gatewayName
 		
 	#----------------------------------------------------------------------
 	def onTick(self, tick):
-		"""市场行情推送"""
-		# 通用事件
+		"""Market Push """
+		# Incidents
 		event1 = Event(type_=EVENT_TICK)
-		event1.dict_['data'] = tick
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = tick
+		self. eventEngine. put(event1)
 		
-		# 特定合约代码的事件
-		event2 = Event(type_=EVENT_TICK+tick.vtSymbol)
-		event2.dict_['data'] = tick
-		self.eventEngine.put(event2)
+		# Events for a specific contract code
+		event2 = Event(type_=EVENT_TICK+tick. vtSymbol)
+		event2. dict_['data'] = tick
+		self. eventEngine. put(event2)
 
 	#----------------------------------------------------------------------
 	def onTrade(self, trade):
-		"""成交信息推送"""
-		# 通用事件
+		"""Deal Information Push"""
+		# Incidents
 		event1 = Event(type_=EVENT_TRADE)
-		event1.dict_['data'] = trade
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = trade
+		self. eventEngine. put(event1)
 		
-		# 特定合约的成交事件
-		event2 = Event(type_=EVENT_TRADE+trade.vtSymbol)
-		event2.dict_['data'] = trade
-		self.eventEngine.put(event2)        
+		# Deal events for a specific contract
+		event2 = Event(type_=EVENT_TRADE+trade. vtSymbol)
+		event2. dict_['data'] = trade
+		self. eventEngine. put(event2)        
 
 	#----------------------------------------------------------------------
 	def onOrder(self, order):
-		"""订单变化推送"""
-		# 通用事件
+		"""Order Change Push"""
+		# Incidents
 		event1 = Event(type_=EVENT_ORDER)
-		event1.dict_['data'] = order
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = order
+		self. eventEngine. put(event1)
 		
-		# 特定订单编号的事件
-		event2 = Event(type_=EVENT_ORDER+order.vtOrderID)
-		event2.dict_['data'] = order
-		self.eventEngine.put(event2)
+		# Events for a specific order number
+		event2 = Event(type_=EVENT_ORDER+order. vtOrderID)
+		event2. dict_['data'] = order
+		self. eventEngine. put(event2)
 
 	#----------------------------------------------------------------------
 	def onPosition(self, position):
-		"""持仓信息推送"""
-		# 通用事件
+		"""Position information push"""
+		# Incidents
 		event1 = Event(type_=EVENT_POSITION)
-		event1.dict_['data'] = position
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = position
+		self. eventEngine. put(event1)
 		
-		# 特定合约代码的事件
-		event2 = Event(type_=EVENT_POSITION+position.vtSymbol)
-		event2.dict_['data'] = position
-		self.eventEngine.put(event2)
+		# Events for a specific contract code
+		event2 = Event(type_=EVENT_POSITION+position. vtSymbol)
+		event2. dict_['data'] = position
+		self. eventEngine. put(event2)
 
 	#----------------------------------------------------------------------
 	def onAccount(self, account):
-		"""账户信息推送"""
-		# 通用事件
+		"""Account Information Push"""
+		# Incidents
 		event1 = Event(type_=EVENT_ACCOUNT)
-		event1.dict_['data'] = account
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = account
+		self. eventEngine. put(event1)
 		
-		# 特定合约代码的事件
-		event2 = Event(type_=EVENT_ACCOUNT+account.vtAccountID)
-		event2.dict_['data'] = account
-		self.eventEngine.put(event2)
+		# Events for a specific contract code
+		event2 = Event(type_=EVENT_ACCOUNT+account. vtAccountID)
+		event2. dict_['data'] = account
+		self. eventEngine. put(event2)
 
 	#----------------------------------------------------------------------
 	def onError(self, error):
-		"""错误信息推送"""
-		# 通用事件
+		"""Error message push"""
+		# Incidents
 		event1 = Event(type_=EVENT_ERROR)
-		event1.dict_['data'] = error
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = error
+		self. eventEngine. put(event1)
 		
 	#----------------------------------------------------------------------
 	def onLog(self, log):
-		"""日志推送"""
-		# 通用事件
+		"""Log push"""
+		# Incidents
 		event1 = Event(type_=EVENT_LOG)
-		event1.dict_['data'] = log
-		self.eventEngine.put(event1)
+		event1. dict_['data'] = log
+		self. eventEngine. put(event1)
 		
 	#----------------------------------------------------------------------
 	def onContract(self, contract):
-		"""合约基础信息推送"""
-		# 通用事件
+		"""Contract base information push"""
+		# Incidents
 		event1 = Event(type_=EVENT_CONTRACT)
-		event1.dict_['data'] = contract
-		self.eventEngine.put(event1)        
+		event1. dict_['data'] = contract
+		self. eventEngine. put(event1)        
 
 	#----------------------------------------------------------------------
 	def connect(self):
-		"""连接"""
+		"""Connection"""
 		pass
 
 	#----------------------------------------------------------------------
 	def subscribe(self, subscribeReq):
-		"""订阅行情"""
+		"""Subscribe to quotes"""
 		pass
 
 	#----------------------------------------------------------------------
 	def sendOrder(self, orderReq):
-		"""发单"""
+		"""Billing"""
 		pass
 
 	#----------------------------------------------------------------------
 	def cancelOrder(self, cancelOrderReq):
-		"""撤单"""
+		"""Withdraw"""
 		pass
 
 	#----------------------------------------------------------------------
 	def qryAccount(self):
-		"""查询账户资金"""
+		"""Check Account Funds"""
 		pass
 
 	def qryOrder(self):
@@ -143,308 +143,307 @@ class VtGateway(object):
 
 	#----------------------------------------------------------------------
 	def qryPosition(self):
-		"""查询持仓"""
+		"""Query Positions"""
 		pass
 
 	#----------------------------------------------------------------------
 	def close(self):
-		"""关闭"""
+		"""Close"""
 		pass
 
 
 ########################################################################
 class VtBaseData(object):
-	"""回调函数推送数据的基础类，其他数据类继承于此"""
+	"""The callback function pushes the underlying class of the data, and other data classes inherit from this """
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		self.gatewayName = EMPTY_STRING         # Gateway名称        
-		self.rawData = None                     # 原始数据
+		self. gatewayName = EMPTY_STRING # GatewayName 
+		self. rawData = None # raw data
 		
 		
 ########################################################################
 class VtTickData(VtBaseData):
-	"""Tick行情数据类"""
+	"""Tick Quotes Data Class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtTickData, self).__init__()
+		super(VtTickData, self). __init__()
 		
-		# 代码相关
-		self.symbol = EMPTY_STRING              # 合约代码
-		self.exchange = EMPTY_STRING            # 交易所代码
-		self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，通常是 合约代码.交易所代码
+		# Code dependent
+		self. symbol = EMPTY_STRING # contract code
+		self.  exchange = EMPTY_STRING # exchange code
+		self. vtSymbol = EMPTY_STRING # The unique code of the contract in the vt system, usually the contract code. Exchange code
 		
-		# 成交数据
-		self.lastPrice = EMPTY_FLOAT            # 最新成交价
-		self.lastVolume = EMPTY_INT             # 最新成交量
-		self.volume = EMPTY_INT                 # 今天总成交量
-		self.openInterest = EMPTY_INT           # 持仓量
-		self.turnover = EMPTY_INT               # 成交额
-		self.time = EMPTY_STRING                # 时间 11:20:56.5
-		self.date = EMPTY_STRING                # 日期 20151009
+		# Deal data
+		self. lastPrice = EMPTY_FLOAT # Latest Transaction Price
+		self. lastVolume = EMPTY_INT # Latest volume
+		self. volume = EMPTY_INT # Total volume for today
+		self. openInterest = EMPTY_INT # open interest
+		self. turnover = EMPTY_INT # turnover
+		self. time = EMPTY_STRING # Time 11:20:56.5
+		self. date = EMPTY_STRING # Date 20151009
 
-		# 常规行情
-		self.openPrice = EMPTY_FLOAT            # 今日开盘价
-		self.closePrice = EMPTY_FLOAT           # today closePrice
-		self.highPrice = EMPTY_FLOAT            # 今日最高价
-		self.lowPrice = EMPTY_FLOAT             # 今日最低价
-		self.preClosePrice = EMPTY_FLOAT        # 昨收盘价
-		self.preSettlementPrice = EMPTY_FLOAT   # 昨结算价
-		self.preOpenInterest = EMPTY_FLOAT      # 昨持仓量
+		# General quotes
+		self. openPrice = EMPTY_FLOAT # Today's Open price
+		self. closePrice = EMPTY_FLOAT # today closePrice
+		self. highPrice = EMPTY_FLOAT # Today's High
+		self. lowPrice = EMPTY_FLOAT # Today's low
+		self. preClosePrice = EMPTY_FLOAT # Last Close
+		self. preSettlementPrice = EMPTY_FLOAT # Yesterday's settlement price
+		self. preOpenInterest = EMPTY_FLOAT # Previous Open Positions
 
-		self.upperLimit = EMPTY_FLOAT           # 涨停价
-		self.lowerLimit = EMPTY_FLOAT           # 跌停价
+		self. upperLimit = EMPTY_FLOAT # up and down price
+		self. lowerLimit = EMPTY_FLOAT # Stop Price
 
-		self.bids = []
-		self.asks = []
-		# 五档行情
-		self.bidPrice1 = EMPTY_FLOAT
-		self.bidPrice2 = EMPTY_FLOAT
-		self.bidPrice3 = EMPTY_FLOAT
-		self.bidPrice4 = EMPTY_FLOAT
-		self.bidPrice5 = EMPTY_FLOAT
+		self. bids = []
+		self. asks = []
+		# Five levels of quotes
+		self. bidPrice1 = EMPTY_FLOAT
+		self. bidPrice2 = EMPTY_FLOAT
+		self. bidPrice3 = EMPTY_FLOAT
+		self. bidPrice4 = EMPTY_FLOAT
+		self. bidPrice5 = EMPTY_FLOAT
 		
-		self.askPrice1 = EMPTY_FLOAT
-		self.askPrice2 = EMPTY_FLOAT
-		self.askPrice3 = EMPTY_FLOAT
-		self.askPrice4 = EMPTY_FLOAT
-		self.askPrice5 = EMPTY_FLOAT        
+		self. askPrice1 = EMPTY_FLOAT
+		self. askPrice2 = EMPTY_FLOAT
+		self. askPrice3 = EMPTY_FLOAT
+		self. askPrice4 = EMPTY_FLOAT
+		self. askPrice5 = EMPTY_FLOAT        
 		
-		self.bidVolume1 = EMPTY_INT
-		self.bidVolume2 = EMPTY_INT
-		self.bidVolume3 = EMPTY_INT
-		self.bidVolume4 = EMPTY_INT
-		self.bidVolume5 = EMPTY_INT
+		self. bidVolume1 = EMPTY_INT
+		self. bidVolume2 = EMPTY_INT
+		self. bidVolume3 = EMPTY_INT
+		self. bidVolume4 = EMPTY_INT
+		self. bidVolume5 = EMPTY_INT
 		
-		self.askVolume1 = EMPTY_INT
-		self.askVolume2 = EMPTY_INT
-		self.askVolume3 = EMPTY_INT
-		self.askVolume4 = EMPTY_INT
-		self.askVolume5 = EMPTY_INT         
+		self. askVolume1 = EMPTY_INT
+		self. askVolume2 = EMPTY_INT
+		self. askVolume3 = EMPTY_INT
+		self. askVolume4 = EMPTY_INT
+		self. askVolume5 = EMPTY_INT         
     
     
 ########################################################################
 class VtTradeData(VtBaseData):
-	"""成交数据类"""
+	"""Deal data class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtTradeData, self).__init__()
+		super(VtTradeData, self). __init__()
 		
-		# 代码编号相关
-		self.symbol = EMPTY_STRING              # 合约代码
-		self.exchange = EMPTY_STRING            # 交易所代码
-		self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，通常是 合约代码.交易所代码
+		# Code number dependent
+		self. symbol = EMPTY_STRING # contract code
+		self.  exchange = EMPTY_STRING # exchange code
+		self. vtSymbol = EMPTY_STRING # The unique code of the contract in the vt system, usually the contract code. Exchange code
 		
-		self.tradeID = EMPTY_STRING             # 成交编号
-		self.vtTradeID = EMPTY_STRING           # 成交在vt系统中的唯一编号，通常是 Gateway名.成交编号
+		self. tradeID = EMPTY_STRING # deal number
+		self. vtTradeID = EMPTY_STRING # The unique number of deals in the vt system, usually the Gateway name. Deal number
 		
-		self.orderID = EMPTY_STRING             # 订单编号
-		self.vtOrderID = EMPTY_STRING           # 订单在vt系统中的唯一编号，通常是 Gateway名.订单编号
+		self. orderID = EMPTY_STRING # order number
+		self. vtOrderID = EMPTY_STRING # The unique number of the order in the vt system, usually the Gateway name. The order number
 		
-		# 成交相关
-		self.direction = EMPTY_UNICODE          # 成交方向
-		self.offset = EMPTY_UNICODE             # 成交开平仓
-		self.price = EMPTY_FLOAT                # 成交价格
-		self.volume = EMPTY_INT                 # 成交数量
-		self.tradeTime = EMPTY_STRING           # 成交时间
+		# Deal related
+		self.  direction = EMPTY_UNICODE # deal direction
+		self. offset = EMPTY_UNICODE # Deal Open and Close Position
+		self.  price = EMPTY_FLOAT # Deal price
+		self. volume = EMPTY_INT # number of deals
+		self. tradeTime = EMPTY_STRING # Deal time
    
 
 ########################################################################
 class VtOrderData(VtBaseData):
-	"""订单数据类"""
+	"""Order data class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtOrderData, self).__init__()
+		super(VtOrderData, self). __init__()
 		
-		# 代码编号相关
-		self.symbol = EMPTY_STRING              # 合约代码
-		self.exchange = EMPTY_STRING            # 交易所代码
-		self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，通常是 合约代码.交易所代码
+		# Code number dependent
+		self. symbol = EMPTY_STRING # contract code
+		self.  exchange = EMPTY_STRING # exchange code
+		self. vtSymbol = EMPTY_STRING # The unique code of the contract in the vt system, usually the contract code. Exchange code
 		
-		self.orderID = EMPTY_STRING             # 订单编号
-		self.vtOrderID = EMPTY_STRING           # 订单在vt系统中的唯一编号，通常是 Gateway名.订单编号
+		self. orderID = EMPTY_STRING # order number
+		self. vtOrderID = EMPTY_STRING # The unique number of the order in the vt system, usually the Gateway name. The order number
 		
-		# 报单相关
-		self.direction = EMPTY_UNICODE          # 报单方向
-		self.offset = EMPTY_UNICODE             # 报单开平仓
-		self.price = EMPTY_FLOAT                # 报单价格
-		self.totalVolume = EMPTY_FLOAT          # 报单总数量
-		self.tradedVolume = EMPTY_FLOAT         # 报单成交数量
-		self.status = EMPTY_UNICODE             # 报单状态
+		# Bill-related
+		self.  direction = EMPTY_UNICODE # reports a single direction
+		self. offset = EMPTY_UNICODE # Open and close a position
+		self.  price = EMPTY_FLOAT # Quote price
+		self. totalVolume = EMPTY_FLOAT # Total number of orders
+		self. tradedVolume = EMPTY_FLOAT # number of deal orders
+		self.  status = EMPTY_UNICODE # Reporting status
 
 		# self.orderDate = EMPTY_STRING           # sendOrder Date
-		self.orderTime = EMPTY_STRING           # 发单时间
-		self.cancelTime = EMPTY_STRING          # 撤单时间
+		self. orderTime = EMPTY_STRING # Billing time
+		self. cancelTime = EMPTY_STRING # Cancellation time
 		
-		# CTP/LTS相关
-		self.frontID = EMPTY_INT                # 前置机编号
-		self.sessionID = EMPTY_INT              # 连接编号
+		# CTP/LTS related
+		self. frontID = EMPTY_INT# Frontage number
+		self. sessionID = EMPTY_INT # connection number
 
     
 ########################################################################
 class VtPositionData(VtBaseData):
-	"""持仓数据类"""
+	"""Position data class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtPositionData, self).__init__()
+		super(VtPositionData, self). __init__()
 		
-		# 代码编号相关
-		self.symbol = EMPTY_STRING              # 合约代码
-		self.exchange = EMPTY_STRING            # 交易所代码
-		self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，合约代码.交易所代码  
+		# Code number dependent
+		self. symbol = EMPTY_STRING # contract code
+		self.  exchange = EMPTY_STRING # exchange code
+		self. vtSymbol = EMPTY_STRING # The unique code of the contract in the vt system, the contract code. Exchange code 
 		
-		# 持仓相关
-		self.direction = EMPTY_STRING           # 持仓方向
-		self.position = EMPTY_INT               # 持仓量
-		self.frozen = EMPTY_INT                 # 冻结数量
-		self.price = EMPTY_FLOAT                # 持仓均价
-		self.vtPositionName = EMPTY_STRING      # 持仓在vt系统中的唯一代码，通常是vtSymbol.方向
+		# Position related
+		self.  direction = EMPTY_STRING # position direction
+		self. position = EMPTY_INT # Open Position
+		self. frozen = EMPTY_INT # number of freezes
+		self. price = EMPTY_FLOAT # Average price of the position
+		self. vtPositionName = EMPTY_STRING # The unique code for positions held in the vt system, usually in the vtSymbol.direction direction
 		
-		# 20151020添加
-		self.ydPosition = EMPTY_INT             # 昨持仓
-		self.positionProfit = EMPTY_FLOAT
+		# 20151020 add
+		self. ydPosition = EMPTY_INT # Previous position
+		self. positionProfit = EMPTY_FLOAT
 
 
 ########################################################################
 class VtAccountData(VtBaseData):
-	"""账户数据类"""
+	"""Account Data Class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtAccountData, self).__init__()
+		super(VtAccountData, self). __init__()
 		
-		# 账号代码相关
-		self.accountID = EMPTY_STRING           # 账户代码
-		self.vtAccountID = EMPTY_STRING         # 账户在vt中的唯一代码，通常是 Gateway名.账户代码
-		self.currency = EMPTY_STRING
+		# Account code related
+		self. accountID = EMPTY_STRING # account code
+		self. vtAccountID = EMPTY_STRING # The unique code of the account in vt, usually the Gateway name. Account code
+		self. currency = EMPTY_STRING
 		
-		# 数值相关
-		self.preBalance = EMPTY_FLOAT           # 昨日账户结算净值
-		self.balance = EMPTY_FLOAT              # 账户净值
-		self.available = EMPTY_FLOAT            # 可用资金
-		self.commission = EMPTY_FLOAT           # 今日手续费
-		self.margin = EMPTY_FLOAT               # 保证金占用
-		self.closeProfit = EMPTY_FLOAT          # 平仓盈亏
-		self.positionProfit = EMPTY_FLOAT       # 持仓盈亏
+		# Numerical correlation
+		self. preBalance = EMPTY_FLOAT # Yesterday's account settlement equity
+		self. balance = EMPTY_FLOAT # Account equity
+		self. available = EMPTY_FLOAT # Available funds
+		self. commission = EMPTY_FLOAT # Today's commission
+		self. margin = EMPTY_FLOAT # margin occupancy
+		self. closeProfit = EMPTY_FLOAT # Close P&L
+		self. positionProfit = EMPTY_FLOAT # P&L of open positions
         
 
 ########################################################################
 class VtErrorData(VtBaseData):
-	"""错误数据类"""
+	"""Error data class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtErrorData, self).__init__()
+		super(VtErrorData, self). __init__()
 		
-		self.errorID = EMPTY_STRING             # 错误代码
-		self.errorMsg = EMPTY_UNICODE           # 错误信息
-		self.additionalInfo = EMPTY_UNICODE     # 补充信息
+		self. errorID = EMPTY_STRING# error code
+		self. errorMsg = EMPTY_UNICODE# error message
+		self. additionalInfo = EMPTY_UNICODE # Supplemental information
 		
-		self.errorTime = time.strftime('%X', time.localtime())    # 错误生成时间
+		self. errorTime = time. strftime('%X', time. localtime()) # Error generation time
 
 
 ########################################################################
 class VtLogData(VtBaseData):
-	"""日志数据类"""
+	"""Log data class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtLogData, self).__init__()
+		super(VtLogData, self). __init__()
 		
-		self.logTime = time.strftime('%X', time.localtime())    # 日志生成时间
-		self.logContent = EMPTY_UNICODE                         # 日志信息
+		self. logTime = time. strftime('%X', time. localtime()) # Log generation time
+		self. logContent = EMPTY_UNICODE # log information
 
 
 ########################################################################
 class VtContractData(VtBaseData):
-	"""合约详细信息类"""
+	"""Contract Detail Class"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		super(VtContractData, self).__init__()
+		super(VtContractData, self). __init__()
 		
-		self.symbol = EMPTY_STRING              # 代码
-		self.exchange = EMPTY_STRING            # 交易所代码
-		self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，通常是 合约代码.交易所代码
-		self.name = EMPTY_UNICODE               # 合约中文名
+		self. symbol = EMPTY_STRING # code
+		self.  exchange = EMPTY_STRING # exchange code
+		self. vtSymbol = EMPTY_STRING # The unique code of the contract in the vt system, usually the contract code. Exchange code
+		self.  name = EMPTY_UNICODE # Contract Chinese name
 		
-		self.productClass = EMPTY_UNICODE       # 合约类型
-		self.size = EMPTY_INT                   # 合约大小
-		self.priceTick = EMPTY_FLOAT            # 合约最小价格TICK
+		self. productClass = EMPTY_UNICODE# contract type
+		self.  size = EMPTY_INT # contract size
+		self. priceTick = EMPTY_FLOAT # Contract minimum price TICK
 		
-		# 期权相关
-		self.strikePrice = EMPTY_FLOAT          # 期权行权价
-		self.underlyingSymbol = EMPTY_STRING    # 标的物合约代码
-		self.optionType = EMPTY_UNICODE         # 期权类型
+		# Options related
+		self. strikePrice = EMPTY_FLOAT # option strike price
+		self. underlyingSymbol = EMPTY_STRING # Underlying contract code
+		self. optionType = EMPTY_UNICODE# option type
 
 
 ########################################################################
 class VtSubscribeReq(object):
-	"""订阅行情时传入的对象类"""
+	"""Object class passed in when subscribing to quotes"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		self.symbol = EMPTY_STRING              # 代码
-		self.exchange = EMPTY_STRING            # 交易所
+		self. symbol = EMPTY_STRING # code
+		self.  exchange = EMPTY_STRING # exchange
 		
-		# 以下为IB相关
-		self.productClass = EMPTY_UNICODE       # 合约类型
-		self.currency = EMPTY_STRING            # 合约货币
-		self.expiry = EMPTY_STRING              # 到期日
-		self.strikePrice = EMPTY_FLOAT          # 行权价
-		self.optionType = EMPTY_UNICODE         # 期权类型
+		# The following are IB related
+		self. productClass = EMPTY_UNICODE# contract type
+		self.  currency = EMPTY_STRING # contract currency
+		self. expiry = EMPTY_STRING# expiration date
+		self. strikePrice = EMPTY_FLOAT # Strike price
+		self. optionType = EMPTY_UNICODE# option type
 
 
 ########################################################################
 class VtOrderReq(object):
-	"""发单时传入的对象类"""
+	"""Object class passed in when billing"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		self.symbol = EMPTY_STRING              # 代码
-		self.exchange = EMPTY_STRING            # 交易所
-		self.price = EMPTY_FLOAT                # 价格
-		self.volume = EMPTY_INT                 # 数量
+		self. symbol = EMPTY_STRING # code
+		self.  exchange = EMPTY_STRING # exchange
+		self.  price = EMPTY_FLOAT # price
+		self. volume = EMPTY_INT # 数量
 
-		self.priceType = EMPTY_STRING           # 价格类型
-		self.direction = EMPTY_STRING           # 买卖
-		self.offset = EMPTY_STRING              # 开平
+		self. priceType = EMPTY_STRING # price type
+		self. direction = EMPTY_STRING # buy and sell
+		self. offset = EMPTY_STRING # open level
 		
-		# 以下为IB相关
-		self.productClass = EMPTY_UNICODE       # 合约类型
-		self.currency = EMPTY_STRING            # 合约货币
-		self.expiry = EMPTY_STRING              # 到期日
-		self.strikePrice = EMPTY_FLOAT          # 行权价
-		self.optionType = EMPTY_UNICODE         # 期权类型        
+		# The following are IB related
+		self. productClass = EMPTY_UNICODE# contract type
+		self.  currency = EMPTY_STRING # contract currency
+		self. expiry = EMPTY_STRING# expiration date
+		self. strikePrice = EMPTY_FLOAT # Strike price
+		self. optionType = EMPTY_UNICODE# option type 
 		
 
 ########################################################################
 class VtCancelOrderReq(object):
-	"""撤单时传入的对象类"""
+	"""Object class passed in when unblocking"""
 
 	#----------------------------------------------------------------------
 	def __init__(self):
 		"""Constructor"""
-		self.symbol = EMPTY_STRING              # 代码
-		self.exchange = EMPTY_STRING            # 交易所
+		self. symbol = EMPTY_STRING # code
+		self.  exchange = EMPTY_STRING # exchange
 		
-		# 以下字段主要和CTP、LTS类接口相关
-		self.orderID = EMPTY_STRING             # 报单号
-		self.frontID = EMPTY_STRING             # 前置机号
-		self.sessionID = EMPTY_STRING           # 会话号
-  
+		# The following fields are mainly related to CTP and LTS class interfaces
+		self. orderID = EMPTY_STRING # Billing number
+		self. frontID = EMPTY_STRING # Previous machine number
+		self. sessionID = EMPTY_STRING # session number
