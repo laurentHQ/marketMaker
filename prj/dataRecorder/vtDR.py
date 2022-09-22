@@ -261,7 +261,7 @@ class MainEngine(object):
 	
 ########################################################################
 class DataEngine(object):
-	"""Data Engine"
+	"""Data Engine"""
 	contractFileName = 'ContractData.vt'
 
 	# ----------------------------------------------------------------------
