@@ -102,7 +102,7 @@ channelSymbolMap['ok_sub_spotcny_eth_depth_20'] = SYMBOL_ETH_CNY
 
 ########################################################################
 class OkcoinGateway(VtGateway):
-	""OkCoin interface"""
+	"""OkCoin interface"""
 
 	# ----------------------------------------------------------------------
 	def __init__(self, eventEngine, gatewayName='OKCOIN'):
@@ -117,7 +117,7 @@ class OkcoinGateway(VtGateway):
 
 	# ----------------------------------------------------------------------
 	def connect(self):
-		""Connection""
+		"""Connection"""
 		# Load json files
 		fileName = self. gatewayName + '_connect.json'
 		fileName = os. path. join(getRootPath(), 'cfg', fileName)
@@ -169,12 +169,12 @@ class OkcoinGateway(VtGateway):
 
 	# ----------------------------------------------------------------------
 	def sendOrder(self, orderReq):
-		""Billing"""
+		"""Billing"""
 		return self. api. spotSendOrder(orderReq)
 
 	# ----------------------------------------------------------------------
 	def cancelOrder(self, cancelOrderReq):
-		""Withdraw"""
+		"""Withdraw"""
 		self. api. spotCancel(cancelOrderReq)
 
 	# ----------------------------------------------------------------------
@@ -184,18 +184,18 @@ class OkcoinGateway(VtGateway):
 
 	# ----------------------------------------------------------------------
 	def qryPosition(self):
-		""Query Positions"""
+		"""Query Positions"""
 		pass
 
 	# ----------------------------------------------------------------------
 	def close(self):
-		""Close"
+		"""Close"""
 		self. api. active = False
 		self. api. close()
 
 	# ----------------------------------------------------------------------
 	def initQuery(self):
-		""Initialize continuous query"""
+		"""Initialize continuous query"""
 		if self. qryEnabled:
 			# A list of query functions that require a loop
 			self. qryFunctionList = [self. qryAccount]
@@ -208,7 +208,7 @@ class OkcoinGateway(VtGateway):
 
 	# ----------------------------------------------------------------------
 	def query(self, event):
-		""Query function registered with the event processing engine"""
+		"""Query function registered with the event processing engine"""
 		self. qryCount += 1
 
 		if self. qryCount > self. qryTrigger:
@@ -226,7 +226,7 @@ class OkcoinGateway(VtGateway):
 
 	# ----------------------------------------------------------------------
 	def startQuery(self):
-		""Start continuous query"""
+		"""Start continuous query"""
 		self. eventEngine. register(EVENT_TIMER, self. query)
 
 	# ----------------------------------------------------------------------
@@ -237,7 +237,7 @@ class OkcoinGateway(VtGateway):
 
 ########################################################################
 class Api(vnokcoin. OkCoinApi):
-	""API implementation of OkCoin"""
+	"""API implementation of OkCoin"""
 
 	# ----------------------------------------------------------------------
 	def __init__(self, gateway):
@@ -275,7 +275,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onMessage(self, ws, evt):
-		""Information push"""
+		"""Information push"""
 		data = self. readData(evt)[0]
 		channel = data['channel']
 		# print '%s %s' % (channel, data)
@@ -284,7 +284,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onError(self, ws, evt):
-		""Error push"""
+		"""Error push"""
 		error = VtErrorData()
 		error. gatewayName = self. gatewayName
 		error. errorMsg = str(evt)
@@ -352,7 +352,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def writeLog(self, content):
-		""Fast logging"""
+		"""Fast logging"""
 		log = VtLogData()
 		log. gatewayName = self. gatewayName
 		log. logContent = content
@@ -360,7 +360,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def initCallback(self):
-		""Initialization callback function"""
+		"""Initialization callback function"""
 		# USD_SPOT
 		self. cbDict['ok_sub_spotusd_btc_ticker'] = self. onTicker
 		self. cbDict['ok_sub_spotusd_ltc_ticker'] = self. onTicker
@@ -458,7 +458,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotUserInfo(self, data):
-		""Spot Account Funds Push"""
+		"""Spot Account Funds Push"""
 		rawData = data['data']
 		info = rawData['info']
 		funds = rawData['info']['funds']
@@ -491,7 +491,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotSubUserInfo(self, data):
-		""Spot Account Funds Push"""
+		"""Spot Account Funds Push"""
 		if 'data' not in data:
 			return
 
@@ -518,7 +518,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotSubTrades(self, data):
-		""Deal and Order Push"""
+		"""Deal and Order Push"""
 		if 'data' not in data:
 			return
 		rawData = data['data']
@@ -582,7 +582,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotOrderInfo(self, data):
-		""Delegate information query callback"""
+		"""Delegate information query callback"""
 		rawData = data['data']
 
 		for d in rawData['orders']:
@@ -630,7 +630,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def generateCnyContract(self):
-		""Generate CNY contract information"""
+		"""Generate CNY contract information"""
 		contractList = []
 
 		contract = VtContractData()
@@ -647,7 +647,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def generateUsdContract(self):
-		""Generate USD contract information"""
+		"""Generate USD contract information"""
 		contractList = []
 
 		# Off-the-shelf
@@ -678,7 +678,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotTrade(self, data):
-		""Return on commission"""
+		"""Return on commission"""
 		rawData = data['data']
 		orderId = str(rawData['order_id'])
 
@@ -699,12 +699,12 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def onSpotCancelOrder(self, data):
-		""Withdrawal return"""
+		"""Withdrawal return"""
 		pass
 
 	# ----------------------------------------------------------------------
 	def spotSendOrder(self, req):
-		""Billing"""
+		"""Billing"""
 		symbol = spotSymbolMapReverse[req. symbol][:4]
 		type_ = priceTypeMapReverse[(req. direction, req. priceType)]
 		self. spotTrade(symbol, type_, str(req. price), str(req. volume))
@@ -718,7 +718,7 @@ class Api(vnokcoin. OkCoinApi):
 
 	# ----------------------------------------------------------------------
 	def spotCancel(self, req):
-		""Withdraw"""
+		"""Withdraw"""
 		symbol = spotSymbolMapReverse[req. symbol][:4]
 		localNo = req. orderID
 
