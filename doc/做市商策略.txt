@@ -1,19 +1,19 @@
-一.做市商策略 MMstrategy.py
-根据okcoin的orderbook，灵活调整zhcoin的orderbook。要求价格一致，挂单量成有一定相关性
 
-1.订阅okcoin的orderbook，根据比例计算出需要在众安交易所中挂出的orderbook
+One. Market maker strategy MMstrategy.py
+According to the orderbook of okcoin, the orderbook of zhcoin is flexibly adjusted. The price is required to be consistent, and the amount of pending orders has a certain correlation
 
-2.取众安交易所当前的orderbook  (详见OnTick函数)
-2.1.将失效的挂单价上的所有挂单撤销
-2.2.如果产生新的挂单价，那么按原数量进行挂单
-2.3.如果某个挂单价上，挂单量多了，则将多出来的挂单撤掉
-2.4.如果某个挂单价上，挂单量少了，则增加挂单
-2.5.如果某个挂单价上，买卖方向发生了变化，则先撤销原来的挂单，再进行挂单
+1. Subscribe to the orderbook of okcoin, and calculate the orderbook that needs to be listed on the ZhongAn exchange according to the proportion
+
+2. Take the current orderbook of ZhongAn Exchange (see OnTick function for details)
+2.1. Cancel all pending orders on the invalid pending order price
+2.2. If a new pending order price is generated, the pending order is placed in the original quantity
+2.3. If there is more pending order volume on a pending order price, the extra pending order will be withdrawn
+2.4. If the amount of pending orders is less on a pending order, the pending order is increased
+2.5. If the direction of buying and selling changes on a pending order, the original pending order is cancelled before the pending order is placed
 2.6.
 
-3.本地建立一张表，记录所有价格上的挂单号  (详见OnOrder函数)
-3.1.当收到排队或部分成交的单子时，进行记录
-3.2.当收到已成交或撤单的单子时，进行删除
-3.3.对于可撤单 且不在list中 ，则插入
-3.4.对于某个价位上的报单全部成交了 或 撤销了，则删除价格key
-
+3. Create a table locally to record the pending order numbers on all prices (see OnOrder function for details)
+3.1. When a queued or partially filled order is received, it is recorded
+3.2. When a closed or cancelled order is received, it is deleted
+3.3. For revocable orders that are not in the list , insert
+3.4. For a certain price where the order is fully filled or cancelled, the price key is deleted
