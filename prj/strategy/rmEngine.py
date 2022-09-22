@@ -18,7 +18,7 @@ from vtFunction import *
 
 ########################################################################
 class RmEngine(object):
-    ""Risk Control Engine"""
+    """Risk Control Engine"""
     settingFileName = 'RM_setting.json'
     settingFileName = os. path. join(ROOT_PATH, 'cfg', settingFileName)
     
@@ -58,7 +58,7 @@ class RmEngine(object):
         
     #----------------------------------------------------------------------
     def loadSetting(self):
-        "Read Configuration"
+        """Read Configuration"""
         with open(self. settingFileName) as f:
             d = json. load(f)
             
@@ -78,7 +78,7 @@ class RmEngine(object):
         
     #----------------------------------------------------------------------
     def saveSetting(self):
-        ""Save risk parameters"""
+        """Save risk parameters"""
         with open(self. settingFileName, 'w') as f:
             # Save risk control parameters
             d = {}
@@ -102,27 +102,27 @@ class RmEngine(object):
         
     #----------------------------------------------------------------------
     def registerEvent(self):
-        ""Register Event Listening"""
+        """Register Event Listening"""
         self. eventEngine. register(EVENT_TRADE, self. updateTrade)
         self. eventEngine. register(EVENT_TIMER, self. updateTimer)
         self. eventEngine. register(EVENT_POSITION, self. updatePosition)
 
     #----------------------------------------------------------------------
     def updateTrade(self, event):
-        ""Update deal data"""
+        """Update deal data"""
         trade = event. dict_['data']
         self. tradeCount += trade. volume
 
     #----------------------------------------------------------------------
     def updatePosition(self, event):
-        ""Update deal data"""
+        """Update deal data"""
         pos = event. dict_['data']
         self. currentPos = pos. position
         # print 'currentPos: %s' % self.currentPos
     
     #----------------------------------------------------------------------
     def updateTimer(self, event):
-        "Update Timer"""
+        """Update Timer"""
         self. orderFlowTimer += 1
         
         # If the timing exceeds the time interval for flow control emptying, the clearing is performed
@@ -132,7 +132,7 @@ class RmEngine(object):
         
     #----------------------------------------------------------------------
     def writeRiskLog(self, content):
-        ""Fast Log Event"""
+        """Fast Log Event"""
         # Beep tone
 
         if platform. uname() == 'Windows':
@@ -149,7 +149,7 @@ class RmEngine(object):
 
     #----------------------------------------------------------------------
     def checkRisk(self, orderReq):
-        ""Check Risk"""
+        """Check Risk"""
         # If the risk control check is not started, it will return to success directly
         if not self. active:
             return True
@@ -196,49 +196,49 @@ class RmEngine(object):
     
     #----------------------------------------------------------------------
     def clearOrderFlowCount(self):
-        ""Empty Flow Count"""
+        """Empty Flow Count"""
         self. orderFlowCount = 0
         self. writeRiskLog(u'Clear Flow Count')
         
     #----------------------------------------------------------------------
     def clearTradeCount(self):
-        ""Empty Deal Quantity Count"""
+        """Empty Deal Quantity Count"""
         self. tradeCount = 0
         self. writeRiskLog(u'Empty total deal count')
         
     #----------------------------------------------------------------------
     def setOrderFlowLimit(self, n):
-        ""Set Flow Control Limits" ""
+        """Set Flow Control Limits"""
         self. orderFlowLimit = n
         
     #----------------------------------------------------------------------
     def setOrderFlowClear(self, n):
-        ""Set Flow Control Clearance Time" ""
+        """Set Flow Control Clearance Time"""
         self. orderFlowClear = n
         
     #----------------------------------------------------------------------
     def setOrderSizeLimit(self, n):
-        ""Set delegate maximum limit"""
+        """Set delegate maximum limit"""
         self. orderSizeLimit = n
         
     #----------------------------------------------------------------------
     def setTradeLimit(self, n):
-        ""Set deal limits"""
+        """Set deal limits"""
         self. tradeLimit = n
         
     #----------------------------------------------------------------------
     def setWorkingOrderLimit(self, n):
-        ""Set Activity Contract Limits"""
+        """Set Activity Contract Limits"""
         self. workingOrderLimit = n
 
     #----------------------------------------------------------------------
     def setCurrentPosLimit(self, n):
-        ""Set Activity Contract Limits"""
+        """Set Activity Contract Limits"""
         self. currentPosLimit = n
         
     #----------------------------------------------------------------------
     def switchEngineStatus(self):
-        ""Switch risk engine"""
+        """Switch risk engine"""
         self. active = not self. active
         
         if self. active:
