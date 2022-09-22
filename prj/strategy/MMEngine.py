@@ -466,7 +466,7 @@ class MMEngine(object):
 
     #---------------------------------------------------------------------
     def startStrategy(self, name):
-        """Startup Policy"
+        """Startup Policy"""
         if name in self. strategyDict:
             strategy = self. strategyDict[name]
             
@@ -500,7 +500,7 @@ class MMEngine(object):
     
     #----------------------------------------------------------------------
     def saveSetting(self):
-        "Save Policy Configuration"
+        """Save Policy Configuration"""
         with open(self. settingFileName, 'w') as f:
             l = []
             
@@ -515,7 +515,7 @@ class MMEngine(object):
     
     #----------------------------------------------------------------------
     def loadSetting(self):
-        "Read Policy Configuration"
+        """Read Policy Configuration"""
         with open(self. settingFileName) as f:
             l = json. load(f)
             
@@ -554,13 +554,13 @@ class MMEngine(object):
         
     #----------------------------------------------------------------------
     def putStrategyEvent(self, name):
-        """Trigger policy state change events (typically used to notify GUI updates)"
+        """Trigger policy state change events (typically used to notify GUI updates)"""
         event = Event(EVENT_CTA_STRATEGY+name)
         self. eventEngine. put(event)
         
     #----------------------------------------------------------------------
     def callStrategyFunc(self, strategy, func, params=None):
-        """A function that calls the policy to catch an exception if it triggers""""
+        """A function that calls the policy to catch an exception if it triggers"""
         try:
             if params:
                 func(params)
