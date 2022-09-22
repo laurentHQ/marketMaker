@@ -1,5 +1,5 @@
 {
-	"fontFamily": "微软雅黑",
+	"fontFamily": "monospace",
 	"fontSize": 12,
 
 	"mongoHost": "192.168.27.50",
