@@ -79,11 +79,11 @@ ORDER_STATUS_CANCELLING = 4
 
 ########################################################################
 class OkCoinApi(object):
-	""Websocket-based API objects""
+	"""Websocket-based API objects"""
 
 	# ----------------------------------------------------------------------
 	def __init__(self):
-		""Constructor""
+		"""Constructor"""
 		self. apiKey = ''# username
 		self. secretKey = ''# password 
 		self. host = '' # server address
@@ -99,7 +99,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def readData(self, evt):
-		""Unzip the data received by the push""
+		"""Unzip the data received by the push"""
 		try:
 			# Create a decompressionr
 			decompress = zlib. decompressobj(-zlib. MAX_WBITS)
@@ -122,7 +122,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def generateSign(self, params):
-		""Generate Signature""
+		"""Generate Signature"""
 		l = []
 		for key in sorted(params. keys()):
 			l. append('%s=%s' % (key, params[key]))
@@ -132,30 +132,30 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def onMessage(self, ws, evt):
-		""Information push""
+		"""Information push"""
 		print 'onMessage'
 		data = self. readData(evt)
 		print data[0]['channel'], data
 
 	# ----------------------------------------------------------------------
 	def onError(self, ws, evt):
-		""Error push""
+		"""Error push"""
 		print 'onError'
 		print if necessary
 
 	# ----------------------------------------------------------------------
 	def onClose(self, ws):
-		""Interface disconnected""
+		"""Interface disconnected"""
 		print 'onClose'
 
 	# ----------------------------------------------------------------------
 	def onOpen(self, ws):
-		""Interface Open""
+		"""Interface Open"""
 		print 'onOpen'
 
 	# ----------------------------------------------------------------------
 	def connect(self, host, apiKey, secretKey, trace=False):
-		""Connection Server""
+		"""Connection Server"""
 		self. host = host
 		self. apiKey = apiKey
 		self. secretKey = secretKey
@@ -178,7 +178,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def reconnect(self):
-		""Reconnect""
+		"""Reconnect"""
 		# Close the previous connection first
 		self. close()
 
@@ -194,14 +194,14 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def close(self):
-		""Close Interface""
+		"""Close Interface"""
 		if self. thread and self. thread. isAlive():
 			self. ws. close()
 			self. thread. join()
 
 	# ----------------------------------------------------------------------
 	def sendMarketDataRequest(self, channel):
-		""Send quote request""
+		"""Send quote request"""
 		# Generate a request
 		d = {}
 		d['event'] = 'addChannel'
@@ -219,7 +219,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def sendTradingRequest(self, channel, params):
-		""Send a trade request""
+		"""Send a trade request"""
 		# Add api_key and signature fields to the parameter dictionary
 		params['api_key'] = self. apiKey
 		params['sign'] = self. generateSign(params)
@@ -247,28 +247,28 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def subscribeSpotTicker(self, symbol):
-		""Subscribe to the regular quote in stock""
+		"""Subscribe to the regular quote in stock"""
 		self. sendMarketDataRequest('ok_sub_spot%s_%s_ticker' % (self. currency, symbol))
 
 	# ----------------------------------------------------------------------
 	def subscribeSpotDepth(self, symbol, depth):
-		""Subscribe to Spot Depth Quotes""
+		"""Subscribe to Spot Depth Quotes"""
 		self. sendMarketDataRequest('ok_sub_spot%s_%s_depth_%s' % (self. currency, symbol, depth))
 
 		# ----------------------------------------------------------------------
 
 	def subscribeSpotTradeData(self, symbol):
-		""Subscribe to spot deals""
+		"""Subscribe to spot deals"""
 		self. sendMarketDataRequest('ok_sub_spot%s_%s_trades' % (self. currency, symbol))
 
 	# ----------------------------------------------------------------------
 	def subscribeSpotKline(self, symbol, interval):
-		""Subscribe to spot candlesticks""
+		"""Subscribe to spot candlesticks"""
 		self. sendMarketDataRequest('ok_sub_spot%s_%s_kline_%s' % (self. currency, symbol, interval))
 
 	# ----------------------------------------------------------------------
 	def spotTrade(self, symbol, type_, price, amount):
-		""Spot order""
+		"""Spot order"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['type'] = str(type_)
@@ -281,7 +281,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def spotCancelOrder(self, symbol, orderid):
-		""Spot Withdrawal""
+		"""Spot Withdrawal"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['order_id'] = str(orderid)
@@ -292,14 +292,14 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def spotUserInfo(self):
-		""Enquiry Spot Account""
+		"""Enquiry Spot Account"""
 		channel = 'ok_spot%s_userinfo' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
 
 	# ----------------------------------------------------------------------
 	def spotOrderInfo(self, symbol, orderid):
-		""Query Spot Order Information""
+		"""Query Spot Order Information"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['order_id'] = str(orderid)
@@ -310,14 +310,14 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def subscribeSpotTrades(self):
-		""Subscribe to spot deal information""
+		"""Subscribe to spot deal information"""
 		channel = 'ok_sub_spot%s_trades' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
 
 	# ----------------------------------------------------------------------
 	def subscribeSpotUserInfo(self):
-		""Subscribe to Spot Account Information""
+		"""Subscribe to Spot Account Information"""
 		channel = 'ok_sub_spot%s_userinfo' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
@@ -328,35 +328,35 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureTicker(self, symbol, expiry):
-		""Subscribe to regular futures quotes""
+		"""Subscribe to regular futures quotes"""
 		self. sendMarketDataRequest('ok_sub_future%s_%s_ticker_%s' % (self. currency, symbol, expiry))
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureDepth(self, symbol, expiry, depth):
-		""Subscribe to futures depth quotes""
+		"""Subscribe to futures depth quotes"""
 		self. sendMarketDataRequest('ok_sub_future%s_%s_depth_%s_%s' % (self. currency, symbol,
 																	   expiry, depth))
 
 		# ----------------------------------------------------------------------
 
 	def subscribeFutureTradeData(self, symbol, expiry):
-		""Subscribe to futures deal history""
+		"""Subscribe to futures deal history"""
 		self. sendMarketDataRequest('ok_sub_future%s_%s_trade_%s' % (self. currency, symbol, expiry))
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureKline(self, symbol, expiry, interval):
-		""Subscribe to futures candlesticks""
+		"""Subscribe to futures candlesticks"""
 		self. sendMarketDataRequest('ok_sub_future%s_%s_kline_%s_%s' % (self. currency, symbol,
 																	   expiry, interval))
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureIndex(self, symbol):
-		""Subscribe to futures index""
+		"""Subscribe to futures index"""
 		self. sendMarketDataRequest('ok_sub_future%s_%s_index' % (self. currency, symbol))
 
 	# ----------------------------------------------------------------------
 	def futureTrade(self, symbol, expiry, type_, price, amount, order, leverage):
-		""Futures Order""
+		"""Futures Order"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['type'] = str(type_)
@@ -372,7 +372,7 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def futureCancelOrder(self, symbol, expiry, orderid):
-		""Futures Cancellation""
+		"""Futures Cancellation"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['order_id'] = str(orderid)
@@ -384,14 +384,14 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def futureUserInfo(self):
-		""Enquiry Futures Account""
+		"""Enquiry Futures Account"""
 		channel = 'ok_future%s_userinfo' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
 
 	# ----------------------------------------------------------------------
 	def futureOrderInfo(self, symbol, expiry, orderid, status, page, length):
-		""Inquiry of futures order information""
+		"""Inquiry of futures order information"""
 		params = {}
 		params['symbol'] = str(symbol + self. currency)
 		params['order_id'] = str(orderid)
@@ -406,21 +406,21 @@ class OkCoinApi(object):
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureTrades(self):
-		""Subscribe to futures deal information""
+		"""Subscribe to futures deal information"""
 		channel = 'ok_sub_future%s_trades' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
 
 	# ----------------------------------------------------------------------
 	def subscribeFutureUserInfo(self):
-		""Subscribe to futures account information""
+		"""Subscribe to futures account information"""
 		channel = 'ok_sub_future%s_userinfo' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
 
 	# ----------------------------------------------------------------------
 	def subscribeFuturePositions(self):
-		""Subscribe to futures position information""
+		"""Subscribe to futures position information"""
 		channel = 'ok_sub_future%s_positions' % (self. currency)
 
 		self. sendTradingRequest(channel, {})
