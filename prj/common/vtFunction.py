@@ -1,10 +1,10 @@
 # encoding: UTF-8
 
 """
-包含一些开发中常用的函数
+Contains some functions that are commonly used in development
 """
 
-import os
+import the
 import decimal
 import json
 from datetime import datetime
@@ -17,48 +17,48 @@ MAX_DECIMAL = 4
 def getRootPath():
 	path = ''
 	for i in range(1,10):
-		path = os.path.abspath(os.path.dirname('../'*i))
+		path = os. path. abspath(os. path. dirname('.. /'*i))
 		path = path 
-		if os.path.exists(path+'/log/') and os.path.exists(path+'/cfg/'):
+		if os. path. exists(path+'/log/') and os. path. exists(path+'/cfg/'):
 			break
 	return path
 
 ROOT_PATH = getRootPath()
 def appendPath(path):
-	files = os.listdir(path)
+	files = os. listdir(path)
 	for fi in files:
-		fi_d = os.path.join(path, fi)
-		if os.path.isdir(fi_d):
-			sys.path.append(fi_d)
+		fi_d = os. path. join(path, fi)
+		if os. path. isdir(fi_d):
+			sys. path. append(fi_d)
 			appendPath(fi_d)
 
 appendPath(ROOT_PATH)
 
 #----------------------------------------------------------------------
 def safeUnicode(value):
-    """检查接口数据潜在的错误，保证转化为的字符串正确"""
-    # 检查是数字接近0时会出现的浮点数上限
+    """Check the interface data for potential errors to ensure that the converted string is correct"""
+    # Check is the upper limit of the floating-point number that appears when the number is close to 0
     if type(value) is int or type(value) is float:
         if value > MAX_NUMBER:
             value = 0
     
-    # 检查防止小数点位过多
+    # Check to prevent too many decimal places
     if type(value) is float:
-        d = decimal.Decimal(str(value))
-        if abs(d.as_tuple().exponent) > MAX_DECIMAL:
+        d = decimal. Decimal(str(value))
+        if abs(d. as_tuple(). exponent) > MAX_DECIMAL:
             value = round(value, ndigits=MAX_DECIMAL)
     
     return unicode(value)
 
 #----------------------------------------------------------------------
 def loadMongoSetting():
-    """载入MongoDB数据库的配置"""
+    """Configuration of loading MongoDB database"""
     fileName = 'VT_setting.json'
-    fileName = os.path.join(ROOT_PATH, 'cfg', fileName)  
+    fileName = os. path. join(ROOT_PATH, 'cfg', fileName)  
     
     try:
         f = file(fileName)
-        setting = json.load(f)
+        setting = json. load(f)
         host = setting['mongoHost']
         port = setting['mongoPort']
     except:
@@ -69,8 +69,8 @@ def loadMongoSetting():
 
 #----------------------------------------------------------------------
 def todayDate():
-    """获取当前本机电脑时间的日期"""
-    return datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)    
+    """Get the date of the current native PC time"""
+    return datetime. now(). replace(hour=0, minute=0, second=0, microsecond=0)    
 
 def priceUniform(price):
     return int(round(float(price)*100))/100.0
