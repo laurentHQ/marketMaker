@@ -1,13 +1,11 @@
 # encoding: UTF-8
 
 """
-一个ATR-RSI指标结合的交易策略，适合用在股指的1分钟和5分钟线上。
-
-注意事项：
-1. 作者不对交易盈利做任何保证，策略代码仅供参考
-2. 本策略需要用到talib，没有安装的用户请先参考www.vnpy.org上的教程安装
-3. 将IF0000_1min.csv用ctaHistoryData.py导入MongoDB后，直接运行本文件即可回测策略
-
+A trading strategy that combines the ATR-RSI indicator and is suitable for use on the 1-minute and 5-minute lines of the stock index.
+Notes:
+1. The author does not make any guarantee of trading profitability, the strategy code is for reference only
+2. This policy requires talib, if you do not have it installed, please refer to the tutorial on the www.vnpy.org to install it first
+3. After importing the IF0000_1min.csv ctaHistoryData.py into MongoDB, run this file directly to test the policy
 """
 
 from MMBase import *
@@ -29,40 +27,40 @@ DIRECTION_SHORT = u'空'
 
 ########################################################################
 class MarketBalance(MMTemplate):
-    """BitCoin做市平衡市场交易策略"""
+    """BitCoin Market Making Balanced Market Trading Strategy"""
     className = 'MMStrategy'
     author = u'CYX'
 
-    # 策略参数
-    initDays = 10  # 初始化数据所用的天数
+    # Policy parameters
+    initDays = 10 # The number of days it took to initialize the data
 
-    # 策略变量
-    bar = None  # K线对象
-    barMinute = EMPTY_STRING  # K线当前的分钟
+    # Policy variables
+    bar = None # candlestick object
+    barMinute = EMPTY_STRING # K line current minute
 
-    bufferSize = 100  # 需要缓存的数据的大小
-    bufferCount = 0  # 目前已经缓存了的数据的计数
-    highArray = np.zeros(bufferSize)  # K线最高价的数组
-    lowArray = np.zeros(bufferSize)  # K线最低价的数组
-    closeArray = np.zeros(bufferSize)  # K线收盘价的数组
+    bufferSize = 100 # The size of the data that needs to be cached
+    bufferCount = 0 # Count of data that is currently cached
+    highArray = np. zeros(bufferSize) # array of candlestick highs
+    lowArray = np. zeros(bufferSize) # array of candlestick lows
+    closeArray = np. Zeros(bufferSize) # An array of candlestick closing prices
 
-    orderList = []  # 保存委托代码的列表
+    orderList = [] # Saves a list of delegate codes
     EntryOrder = []
 
-    # 参数列表，保存了参数的名称
+    # Parameter list, the name of the parameter is saved
     paramList = ['name',
                  'className',
                  'author',
                  'vtSymbol']
 
-    # 变量列表，保存了变量的名称
+    # A list of variables that hold the name of the variable
     varList = ['inited',
                'trading',
                'pos']
 
-    # orderbook_prc = {}      # 记录上一个tick的订单薄价格
-    # orderbook_vol = {}      # 记录上一个tick的订单薄交易量
-    # tick_old = VtTickData()             # 记录上一个tick
+    # orderbook_prc = {} # Record the order book price on a tick
+    # orderbook_vol = {} # Record the order book volume on a tick
+    # tick_old = VtTickData() # Record the last tick
     orderbook1 = []
     orderbook2 = []
     tunepct = 0.5
@@ -77,81 +75,81 @@ class MarketBalance(MMTemplate):
     def __init__(self, mmEngine, setting):
         """Constructor"""
         # the mmEngine here could be either MMEngine for real-trading, or backtestingEngine for backtesting.
-        super(MarketBalance, self).__init__(mmEngine, setting)
+        super(MarketBalance, self). __init__(mmEngine, setting)
 
-        # 注意策略类中的可变对象属性（通常是list和dict等），在策略初始化时需要重新创建，
-        # 否则会出现多个策略实例之间数据共享的情况，有可能导致潜在的策略逻辑错误风险，
-        # 策略类中的这些可变对象属性可以选择不写，全都放在__init__下面，写主要是为了阅读
-        # 策略时方便（更多是个编程习惯的选择）
+        # Note that the mutable object properties in the policy class (usually list and dict, etc.) need to be recreated when the policy is initialized.
+        # Otherwise, data sharing between multiple policy instances may occur, which may lead to potential policy logic errors.
+        # These mutable object properties in the policy class can be chosen not to write, all placed under the __init__, written mainly for reading
+        # Convenient strategy (more of a programming habit choice)
         # order_id -> order
-        self.idOrderDict = {}
+        self. idOrderDict = {}
         # price -> list(order_id)
-        self.priceOrderIdsDict = {}
+        self. priceOrderIdsDict = {}
 
-        self.orderUpdate = False
-        self.tickUpdate = False
-        self.OKtickUpdate = False
+        self. orderUpdate = False
+        self. tickUpdate = False
+        self. OKtickUpdate = False
 
-        self.logger = vnLog('marketMaker.log')
+        self. logger = vnLog('marketMaker.log')
     # ----------------------------------------------------------------------
     def onInit(self):
-        """初始化策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略初始化' % self.name)
+        """Initialization policy (must be implemented by user inheritance)"""
+        self. writeCtaLog(u'%s policy initialization' % self.). name)
 
-        # # 载入历史数据，并采用回放计算的方式初始化策略数值
+        # # Load historical data and initialize the policy value by means of playback calculation
         # initData = self.loadBar(self.initDays)
         # for bar in initData:
         #     self.onBar(bar)
 
-        self.putEvent()
+        self. putEvent()
 
     # ----------------------------------------------------------------------
     def onStart(self):
-        """启动策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略启动' % self.name)
-        self.putEvent()
+        """Startup policy (must be implemented by user inheritance)"""
+        self. writeCtaLog(u'%s策略启动' % self. name)
+        self. putEvent()
 
     # ----------------------------------------------------------------------
     def onStop(self):
-        """停止策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略停止' % self.name)
-        self.putEvent()
+        """Stop policy (must be implemented by user inheritance)"""
+        self. writeCtaLog(u'%s策略停止' % self. name)
+        self. putEvent()
 
 
-    # 做市策略：根据okcoin的orderbook，灵活调整zhcoin的orderbook。要求价格一致，挂单量成有一定相关性
+    Market making strategy: According to the orderbook of okcoin, flexibly adjust the orderbook of zhcoin. The price is required to be consistent, and the amount of pending orders has a certain correlation
     def onTick(self, tick):
-        if 'OKCOIN' in tick.vtSymbol:
+        if 'OKCOIN' in tick. vtSymbol:
             def get_orderbook1():
-                bids1 = copy.deepcopy(tick.bids)
-                asks1 = copy.deepcopy(tick.asks)
+                bids1 = copy. deepcopy(tick. bids)
+                asks1 = copy. deepcopy(tick. asks)
                 bids1vol = [0]*len(bids1)
                 asks1vol = [0]*len(bids1)
                 for i in range(len(bids1)):
-                    bids1[i][0] = priceUniform(bids1[i][0])      # 委托价取两位小数
-                    bids1vol[i] = (float(bids1[i][1]))  # 单独记录委托量以便后续计算总量和比例
+                    bids1[i][0] = priceUniform(bids1[i][0]) # The order price takes two decimal places
+                    bids1vol[i] = (float(bids1[i][1])) # Record the amount of delegate separately for subsequent calculation of the total and proportion
                     asks1[i][0] = priceUniform(asks1[i][0])
                     asks1vol[i] = (float(asks1[i][1]))
 
-                bids1volpct = [x / sum(bids1vol) for x in bids1vol]  # 委买单量占总委买单量比例
-                asks1volpct = [x / sum(asks1vol) for x in asks1vol]  # 委卖单量占总委卖单量比例
+                bids1volpct = [x / sum(bids1vol) for x in bids1vol] # The proportion of the number of orders paid by the General Committee accounts for the number of orders paid by the General Committee
+                asks1volpct = [x / sum(asks1vol) for x in asks1vol] # The number of orders sold by the commission accounts for the proportion of the number of orders sold by the general committee
                 if not bids1vol:
                     return
-                PCT = sum(asks1vol) / sum(bids1vol)  # 总委卖单量与总委买单量比值
-                BuyTotalVol = 5  # ZHCOIN总委买单量（根据人民币账户资金换算成比特币数目确定）
-                SellTotalVol = int(round(BuyTotalVol * PCT * 10)) / 10.0  # 根据市场买卖方量比等比例确定，保留小数点一位
+                PCT = sum(asks1vol) / sum(bids1vol) # The ratio of the amount of sell orders to the amount of orders of the General Committee of the General Committee
+                BuyTotalVol = 5 # ZHCOIN General Committee Buy Order Volume (determined based on the number of RMB account funds converted into Bitcoin).
+                SellTotalVol = int(round(BuyTotalVol * PCT * 10)) / 10.0  # According to the ratio of the volume of buyers and sellers in the market, one decimal place is retained
                 for i in range(len(bids1)):
-                    bids1[i][1] = priceUniform(bids1volpct[i] * BuyTotalVol)  # 某一价位的委托量占总委托量比例保持一致
+                    bids1[i][1] = priceUniform(bids1volpct[i] * BuyTotalVol) # The proportion of orders at a certain price to the total number of orders is consistent
                     asks1[i][1] = - priceUniform(asks1volpct[i] * SellTotalVol)
                 tmp1 = bids1
                 tmp1[len(bids1):] = asks1
-                self.orderbook1 = tmp1  # 目标orderbook,委托量为负表示卖出
+                self. orderbook1 = tmp1 # target orderbook, order amount is negative to sell
             get_orderbook1()
-            self.OKtickUpdate = True
+            self. OKtickUpdate = True
 
-        elif 'ZHCOIN' in tick.vtSymbol:
+        elif 'ZHCOIN' in tick. vtSymbol:
             def get_orderbook2():
-                bids2 = copy.deepcopy(tick.bids)
-                asks2 = copy.deepcopy(tick.asks)
+                bids2 = copy. deepcopy(tick. bids)
+                asks2 = copy. deepcopy(tick. asks)
                 for i in range(len(bids2)):
                     bids2[i][0] = priceUniform(bids2[i][0])
                     bids2[i][1] = volumeUniform(bids2[i][1])
@@ -160,31 +158,31 @@ class MarketBalance(MMTemplate):
                     asks2[i][1] = - volumeUniform(asks2[i][1])
                 tmp2 = bids2
                 tmp2[len(bids2):] = asks2
-                self.orderbook2 = tmp2
+                self. orderbook2 = tmp2
             get_orderbook2()
-            self.tickUpdate = True
+            self. tickUpdate = True
 
-        # 每隔n个tick进行操作
-        self.tickcount += 1
-        if not self.OKtickUpdate or not self.tickUpdate or not self.orderUpdate or self.tickcount <= 2:
+        # Operate every n ticks
+        self. tickcount += 1
+        if not self. OKtickUpdate or not self. tickUpdate or not self. orderUpdate or self. tickcount <= 2:
             return
         else:
-            self.tickcount = 0
+            self. tickcount = 0
 
         print ('OKCOIN')
-        print (self.orderbook1)
+        print (self. orderbook1)
         print ('ZHCOIN')
-        print (self.orderbook2)
+        print (self. orderbook2)
         def trade_in_lastPrice():
-            n = random.randint(1, 10)
-            pri = priceUniform(tick.lastPrice)
+            n = random. randint(1, 10)
+            pri = priceUniform(tick. lastPrice)
             v = 0.0001
             if n % 2 == 0:
-                self.buy('BTC_CNY.ZHCOIN', pri, v)
-                self.sell('BTC_CNY.ZHCOIN', pri - 0.1, v)
+                self. buy('BTC_CNY. ZHCOIN', pri, v)
+                self. sell('BTC_CNY. ZHCOIN', pri - 0.1, v)
             else:
-                self.sell('BTC_CNY.ZHCOIN', pri, v)
-                self.buy('BTC_CNY.ZHCOIN', pri + 0.1, v)
+                self. sell('BTC_CNY. ZHCOIN', pri, v)
+                self. buy('BTC_CNY. ZHCOIN', pri + 0.1, v)
 
             # buyVol = 0.
             # sellVol = 0.
@@ -195,13 +193,13 @@ class MarketBalance(MMTemplate):
             #         sellVol += pri_vol[1]
             # print 'buyVol:',buyVol, 'sellVol:',sellVol
             # if buyVol > 2:
-            #     self.sell('BTC_CNY.ZHCOIN', pri-1000, 2)
+            # self.sell('BTC_CNY. ZHCOIN', pri-1000, 2)
             # elif sellVol > 2:
-            #     self.buy('BTC_CNY.ZHCOIN', pri + 1000, 2)
+            # self.buy('BTC_CNY. ZHCOIN', pri + 1000, 2)
 
         trade_in_lastPrice()
 
-        self.orderUpdate = False
+        self. orderUpdate = False
 
 
     # ----------------------------------------------------------------------
@@ -210,42 +208,42 @@ class MarketBalance(MMTemplate):
 
     # ----------------------------------------------------------------------
     def onOrder(self, order):
-        if order.status in [STATUS_PARTTRADED, STATUS_PENDING]:
-            if not self.idOrderDict.has_key(order.vtOrderID):
-                self.idOrderDict[order.vtOrderID] = order
-                if order.status == STATUS_PENDING:
-                    print '排队单子', order.vtOrderID
+        if order. status in [STATUS_PARTTRADED, STATUS_PENDING]:
+            if not self. idOrderDict. has_key(order. vtOrderID):
+                self. idOrderDict[order. vtOrderID] = order
+                if order. status == STATUS_PENDING:
+                    print 'Queue List', order. vtOrderID
                 else:
-                    print '部分成交单子', order.vtOrderID
+                    print 'Partial Deal', order. vtOrderID
         else:
-            if order.vtOrderID in self.idOrderDict:
-                del self.idOrderDict[order.vtOrderID]
-                if order.status == STATUS_ALLTRADED:
-                    print '全部成交', order.vtOrderID
+            if order. vtOrderID in self. idOrderDict:
+                del self. idOrderDict[order. vtOrderID]
+                if order. status == STATUS_ALLTRADED:
+                    print 'All Deal', order. vtOrderID
                 else:
-                    print '全部撤单', order.vtOrderID
+                    print 'Cancel All', order. vtOrderID
 
-        price = priceUniform(order.price)
+        price = priceUniform(order. price)
 
-        # 可撤单 且不在list中 ，则插入   # 成交了 或 撤销了，则删除
-        if order.status in [STATUS_PARTTRADED, STATUS_PENDING]:
-            if not self.priceOrderIdsDict.has_key(price):
-                self.priceOrderIdsDict[price] = []
+        # Withdrawable order and is not in the list, then insert # Deal or Undo, then delete
+        if order. status in [STATUS_PARTTRADED, STATUS_PENDING]:
+            if not self. priceOrderIdsDict. has_key(price):
+                self. priceOrderIdsDict[price] = []
                 print 'append ', price
-            orderList = self.priceOrderIdsDict[price]
-            if orderList.count(order.vtOrderID) == 0:
-                orderList.append(order.vtOrderID)
+            orderList = self. priceOrderIdsDict[price]
+            if orderList. count(order. vtOrderID) == 0:
+                orderList. append(order. vtOrderID)
         # elif order.status in [STATUS_ALLTRADED, STATUS_CANCELLED]:
         else:
-            if self.priceOrderIdsDict.has_key(price):
-                orderList = self.priceOrderIdsDict[price]
-                if orderList.count(order.vtOrderID) > 0:
-                    orderList.remove(order.vtOrderID)
+            if self. priceOrderIdsDict. has_key(price):
+                orderList = self. priceOrderIdsDict[price]
+                if orderList. count(order. vtOrderID) > 0:
+                    orderList. remove(order. vtOrderID)
                 if len(orderList) == 0:
-                    del self.priceOrderIdsDict[price]
+                    del self. priceOrderIdsDict[price]
                     print 'del ', price
 
-        self.orderUpdate = True
+        self. orderUpdate = True
 
 
     # ----------------------------------------------------------------------
@@ -254,58 +252,58 @@ class MarketBalance(MMTemplate):
 
 
 if __name__ == '__main__':
-    # 提供直接双击回测的功能
-    # 导入PyQt4的包是为了保证matplotlib使用PyQt4而不是PySide，防止初始化出错
+    # Provides the function of direct double-click backtesting
+    The package for PyQt4 is imported to ensure that matplotlib uses PyQt4 instead of PySide, preventing initialization errors
     from ctaBacktesting_tick import *
     from PyQt4 import QtCore, QtGui
 
-    # 创建回测引擎
+    # Create a backtest engine
     engine = BacktestingEngine()
 
-    # 设置引擎的回测模式为K线
-    engine.setBacktestingMode(engine.BAR_MODE)
+    # Set the backtesting mode of the engine to K line
+    engine. setBacktestingMode(engine. BAR_MODE)
 
-    # 设置回测用的数据起始日期
-    engine.setStartDate('20161101')
+    # Set the data start date for backtesting
+    engine. setStartDate('20161101')
     # engine.setStartDate('20110101')
 
-    # 设置使用的历史数据库
-    engine.setDatabase(TICK_DB_NAME, 'EUR_USD.OANDA')
+    # Set the history database used
+    engine. setDatabase(TICK_DB_NAME, 'EUR_USD. OANDA')
     # engine.setDatabase(MINUTE_DB_NAME, 'IF0000')
 
-    # 设置产品相关参数
-    # engine.setSlippage(0.02)     # 股指1跳
-    engine.setSlippage(0.0001)  # 股指1跳
-    engine.setRate(0.3 / 10000)  # 万0.3
-    engine.setSize(300)  # 股指合约大小
-    engine.setFreq(5)
+    # Set product-related parameters
+    # engine.setSlippage(0.02) # Stock index 1 hop
+    engine. setSlippage(0.0001) # Stock index 1 hop
+    engine. setRate(0.3 / 10000) # 万0.3
+    engine. setSize(300) # Stock index contract size
+    engine. setFreq(5)
 
-    ## 在引擎中创建策略对象
+    ## Create a policy object in the engine
     # setting = {'atrLength': 11}
-    engine.initStrategy(MarketBalance)
+    engine. initStrategy(MarketBalance)
 
-    ## 开始跑回测
-    engine.runBacktesting()
+    ## Start running backtest
+    engine. runBacktesting()
 
-    ## 显示回测结果
-    engine.showBacktestingResult()
+    ## Display backtesting results
+    engine. showBacktestingResult()
 
-    # 跑优化
-    # setting = OptimizationSetting()                 # 新建一个优化任务设置对象
-    # setting.setOptimizeTarget('capital')            # 设置优化排序的目标是策略净盈利
-    # setting.addParameter('atrLength', 11, 20, 1)    # 增加第一个优化参数atrLength，起始11，结束12，步进1
-    # setting.addParameter('atrMa', 20, 30, 5)        # 增加第二个优化参数atrMa，起始20，结束30，步进1
+    # Run optimization
+    # setting = OptimizationSetting() # Create a new optimization task settings object
+    # setting.setOptimizeTarget('capital') # Set the goal of optimization ordering to the net profit of the strategy
+    # setting.addParameter('atrLength', 11, 20, 1) # Add the first optimization parameter, atrLength, start 11, end 12, step 1
+    # setting.addParameter('atrMa', 20, 30, 5) # Add a second optimization parameter, atrMa, start 20, end 30, step 1
 
-    # 性能测试环境：I7-3770，主频3.4G, 8核心，内存16G，Windows 7 专业版
-    # 测试时还跑着一堆其他的程序，性能仅供参考
+    # Performance test environment: I7-3770, frequency 3.4G, 8 cores, memory 16G, Windows 7 Pro
+    # There are a bunch of other programs running during the test, and the performance is for reference only
     import time
 
-    start = time.time()
+    start = time. time()
 
-    # 运行单进程优化函数，自动输出结果，耗时：359秒
+    # Run the single-process optimization function and automatically output the result, time-consuming: 359 seconds
     # engine.runOptimization(AtrRsiStrategy, setting)
 
-    # 多进程优化，耗时：89秒
+    # Multi-process optimization, time-consuming: 89 seconds
     # engine.runParallelOptimization(AtrRsiStrategy, setting)
 
     # print u'耗时：%s' %(time.time()-start)
