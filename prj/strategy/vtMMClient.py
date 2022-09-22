@@ -239,7 +239,7 @@ class MainEngine(object):
 ########################################################################
 # Manage contracts, orders, positions and other data
 class DataEngine(object):
-    """Data Engine"
+    """Data Engine"""
     contractFileName = 'ContractData.vt'
 
     # ----------------------------------------------------------------------
