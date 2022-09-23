@@ -7,53 +7,53 @@ EMPTY_INT = 0
 EMPTY_FLOAT = 0.0
 
 # Direction constant
-DIRECTION_NONE = u 'no direction'
+DIRECTION_NONE = u'no direction'
 DIRECTION_LONG = u'buy'
 DIRECTION_SHORT = u'sell'
-DIRECTION_UNKNOWN = u 'Unknown'
+DIRECTION_UNKNOWN = u'Unknown'
 DIRECTION_NET = u'square'
 DIRECTION_SELL = u'sell' # IB interface
 
 # Open the usual amount
 OFFSET_NONE = u'No opening'
-OFFSET_OPEN = u 'Open Position'
+OFFSET_OPEN = u'Open Position'
 OFFSET_CLOSE = u'Close Position'
 OFFSET_CLOSETODAY = u'flat today'
 OFFSET_CLOSEYESTERDAY = u'flat yesterday'
-OFFSET_UNKNOWN = u 'unknown'
+OFFSET_UNKNOWN = u'unknown'
 
 # Status constant
-STATUS_NOTTRADED = u 'unfilled'
+STATUS_NOTTRADED = u'unfilled'
 STATUS_PARTTRADED = u'partial deal'
-STATUS_ALLTRADED = u 'All Deal'
-STATUS_CANCELLED = u 'Undone'
-STATUS_PENDING = u 'In Queue'
-STATUS_UNKNOWN = u 'unknown'
+STATUS_ALLTRADED = u'All Deal'
+STATUS_CANCELLED = u'Undone'
+STATUS_PENDING = u'In Queue'
+STATUS_UNKNOWN = u'unknown'
 STATUS_NOSENT = u'sentFail'
 STATUS_PRESUBMITTED = u'pre_submitted'
 STATUS_PRECANCELLED = u'pre_cancelled'
 
 # Contract type constant
-PRODUCT_EQUITY = u 'stock'
+PRODUCT_EQUITY = u'stock'
 PRODUCT_FUTURES = u'futures'
 PRODUCT_OPTION = u'option'
-PRODUCT_INDEX = u 'exponent'
-PRODUCT_COMBINATION = u 'combined'
+PRODUCT_INDEX = u'exponent'
+PRODUCT_COMBINATION = u'combined'
 PRODUCT_FOREX = u'Forex'
-PRODUCT_UNKNOWN = u 'unknown'
-PRODUCT_SPOT = u 'Spot'
-PRODUCT_DEFER = u 'deferred'
+PRODUCT_UNKNOWN = u'unknown'
+PRODUCT_SPOT = u'Spot'
+PRODUCT_DEFER = u'deferred'
 PRODUCT_NONE = ''
 
 # Price type constant
-PRICETYPE_LIMITPRICE = u 'limit'
+PRICETYPE_LIMITPRICE = u'limit'
 PRICETYPE_MARKETPRICE = u'mark'
 PRICETYPE_FAK = u'FAK'
 PRICETYPE_FOK = u'FOK'
 
 # Option type
 OPTION_CALL = u'Call Options'
-OPTION_PUT = u 'Put Option'
+OPTION_PUT = u'Put Option'
 
 # Exchange type
 EXCHANGE_SSE = 'SSE' # SSE

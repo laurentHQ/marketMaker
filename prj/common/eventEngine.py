@@ -1,13 +1,13 @@
 # encoding: UTF-8
 
 # System modules
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from threading import Thread, Condition
 from time import sleep
 from collections import defaultdict
 
 # Third-party modules
-from PyQt4. QtCore import QTimer
+from PyQt5. QtCore import QTimer
 
 # Self-developed modules
 from eventType import *
@@ -316,10 +316,10 @@ def test():
     """Test function"""
     import sys
     from datetime import datetime
-    from PyQt4. QtCore import QCoreApplication
+    from PyQt5. QtCore import QCoreApplication
     
     def simpletest(event):
-        print u' handles timer events triggered per second: %s' %  str(datetime.). now())
+        print(u' handles timer events triggered per second: %s' %  str(datetime. now()))
     
     app = QCoreApplication(sys. argv)
     

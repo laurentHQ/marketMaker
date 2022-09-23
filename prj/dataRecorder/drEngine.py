@@ -10,7 +10,7 @@ import the
 import copy
 from collections import OrderedDict
 from datetime import datetime, timedelta
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 
 from eventEngine import *

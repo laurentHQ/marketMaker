@@ -8,15 +8,15 @@ from __future__ import division
 
 # Constant definition
 # Types of trade directions involved in the CTA engine
-CTAORDER_BUY = u 'buy'
-CTAORDER_SELL = u 'sell flat'
-CTAORDER_SHORT = u 'sell'
-CTAORDER_COVER = u 'buy flat'
+CTAORDER_BUY = u'buy'
+CTAORDER_SELL = u'sell flat'
+CTAORDER_SHORT = u'sell'
+CTAORDER_COVER = u'buy flat'
 
 # Local stop single state
-STOPORDER_WAITING = u 'pending'
+STOPORDER_WAITING = u'pending'
 STOPORDER_CANCELLED = u'Undone'
-STOPORDER_TRIGGERED = u 'fired'
+STOPORDER_TRIGGERED = u'fired'
 
 # Local stop single prefix
 STOPORDERPREFIX = 'CtaStopOrder.'
@@ -71,7 +71,7 @@ class CtaBarData(object):
         
         self.  date = EMPTY_STRING # bar start time, date
         self.  time = EMPTY_STRING# time
-        self. datetime = None of the datetime objects of the python
+        self. datetime = None #of the datetime objects of the python
         
         self. volume = EMPTY_INT # volume
         self. openInterest = EMPTY_INT # open interest
@@ -101,7 +101,7 @@ class MMTickData(object):
         self.  time = EMPTY_STRING# time
         # self.lastTradeTime = EMPTY_STRING
 
-        self. datetime = None of the datetime objects of the python
+        self. datetime = None #of the datetime objects of the python
 
         self. bids = []
         self. asks = []

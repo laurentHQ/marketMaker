@@ -24,7 +24,7 @@ class MMTemplate(object):
     name = EMPTY_UNICODE # Policy instance name
     vtSymbol = EMPTY_STRING # Contract vt system code for trading 
     productClass = EMPTY_STRING # Product type (only required for IB interface).
-     currency = EMPTY_STRING # currency (required only for IB interface).
+    currency = EMPTY_STRING # currency (required only for IB interface).
     
     # The basic variables of the policy, managed by the engine
     inited = False # Whether initialized or not

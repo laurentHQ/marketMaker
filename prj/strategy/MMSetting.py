@@ -8,6 +8,6 @@ After the user's policy class is written, it is first introduced in the file, an
 Write the class and contract settings for each policy object in CTA_setting.json.
 '''
 
-from MMstrategy_v3 import MarketBalance
+from MMstrategy_v5 import MarketBalance
 STRATEGY_CLASS = {}
 STRATEGY_CLASS['MarketBalance'] = MarketBalance

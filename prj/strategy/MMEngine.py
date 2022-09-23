@@ -54,7 +54,7 @@ class MMEngine(object):
         self. strategyDict = {}
         
         # Dictionary for saving vtSymbol and policy instance map (for pushing tick data)
-        Since it is possible for multiple strategies to trade the same vtSymbol, the key is vtSymbol
+        # Since it is possible for multiple strategies to trade the same vtSymbol, the key is vtSymbol
         # value is the list that contains all related strategy objects
         self. tickStrategyDict = {}
         
@@ -123,7 +123,7 @@ class MMEngine(object):
                 if not posBuffer:
                     req. offset = OFFSET_CLOSE
                 # Otherwise, if there is a long position, then use the flat this time
-                alif posBuffer. longToday:
+                elif posBuffer. longToday:
                     req. offset= OFFSET_CLOSETODAY
                 # Other cases use flat yesterday
                 else:
@@ -146,7 +146,7 @@ class MMEngine(object):
                 if not posBuffer:
                     req. offset = OFFSET_CLOSE
                 # Otherwise, if there is a short position, then use the flat today
-                alif posBuffer. shortToday:
+                elif posBuffer. shortToday:
                     req. offset= OFFSET_CLOSETODAY
                 # Other cases use flat yesterday
                 else:
@@ -572,9 +572,9 @@ class MMEngine(object):
             strategy. inited = False
             
             # Issue logs
-            print traceback. format_exc()
-            content = '\n'. join([u'Policy%sTriggered Exception Stopped'%strategy.' name,
-                                traceback. format_exc()])
+            print (traceback. format_exc())
+            content = '\n'. join([u'Policy%sTriggered Exception Stopped'%strategy.name, 
+                                    traceback. format_exc()])
             self. writeCtaLog(content)
 
 

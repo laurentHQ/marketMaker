@@ -30,6 +30,6 @@ class vnLog(object):
 		
 
 if __name__ == '__main__':
-	print getRootPath()
+	print (getRootPath())
 	vnlog = vnLog('test_log.txt')
 	vnlog. write('hi wu')

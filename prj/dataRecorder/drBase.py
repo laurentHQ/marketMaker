@@ -41,7 +41,7 @@ class DrBarData(object):
         
         self.  date = EMPTY_STRING # bar start time, date
         self.  time = EMPTY_STRING# time
-        self. datetime = None of the datetime objects of the python
+        self. datetime = None #of the datetime objects of the python
 
         self. highTime = EMPTY_STRING # the time happening the highest close during the bar
         self. lowTime = EMPTY_STRING # the time happening the lowest close during the bar
@@ -81,7 +81,7 @@ class DrTickData(object):
         # tick time
         self.  date = EMPTY_STRING # date
         self.  time = EMPTY_STRING# time
-        self. datetime = None of the datetime objects of the python
+        self. datetime = None #of the datetime objects of the python
         
         # Five levels of quotes
         self. bidPrice1 = EMPTY_FLOAT

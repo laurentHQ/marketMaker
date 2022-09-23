@@ -9,6 +9,7 @@ import decimal
 import json
 from datetime import datetime
 import sys
+import os
 
 
 MAX_NUMBER = 10000000000000
@@ -17,7 +18,7 @@ MAX_DECIMAL = 4
 def getRootPath():
 	path = ''
 	for i in range(1,10):
-		path = os. path. abspath(os. path. dirname('.. /'*i))
+		path = os. path. abspath(os. path. dirname('../'*i))
 		path = path 
 		if os. path. exists(path+'/log/') and os. path. exists(path+'/cfg/'):
 			break
@@ -77,3 +78,7 @@ def priceUniform(price):
 
 def volumeUniform(volume):
     return int(round(float(volume) * 10000)) / 10000.0
+
+
+if __name__ == '__main__':
+    print (ROOT_PATH)

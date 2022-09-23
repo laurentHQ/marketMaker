@@ -77,22 +77,22 @@ class MainEngine(object):
 			from btccGateway import BtccGateway
 			self. addGateway(BtccGateway, 'BTCC')
 			self. gatewayDict['BTCC']. setQryEnabled(False)
-		except Exception, e:
-			print e
+		except Exception as e:
+			print (e)
 
 		try:
 			from huobiGateway import HuobiGateway
 			self. addGateway(HuobiGateway, 'HUOBI')
 			self. gatewayDict['HUOBI']. setQryEnabled(False)
-		except Exception, e:
-			print e
+		except Exception as e:
+			print (e)
 
 		try:
 			from huobiGateway import HuobiETHGateway
 			self. addGateway(HuobiETHGateway, 'HUOBIETH')
 			self. gatewayDict['HUOBIETH']. setQryEnabled(False)
-		except Exception, e:
-			print e
+		except Exception as e:
+			print (e)
 
 
 	# DR_setting.json read which gateway to subscribe to which contract
@@ -358,7 +358,7 @@ class DataEngine(object):
 
 if __name__ == '__main__':
 
-	from PyQt4 import QtCore
+	from PyQt5 import QtCore
 	import sys
 
 	app = QtCore. QCoreApplication(sys. argv)
@@ -369,7 +369,7 @@ if __name__ == '__main__':
 
 
 	for i in sys. argv[1:]:
-		print "Connecting Gateway: %s ......" %i
+		print ("Connecting Gateway: %s ......" %i)
 		me. connect(str(i))
 
 	sys. exit(app. exec_())

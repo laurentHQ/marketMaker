@@ -46,7 +46,7 @@ def test():
     global_dict = globals()    
     
     for key, value in global_dict. items():
-        If '__' not in key: # does not check python built-in objects 
+        if '__' not in key: # does not check python built-in objects 
             if value in check_dict:
                 check_dict[value]. append(key)
             else:
@@ -54,12 +54,12 @@ def test():
             
     for key, value in check_dict. items():
         if len(value)>1:
-            print u' has a duplicate constant definition: ' + str(key) 
+            print (u' has a duplicate constant definition: ' + str(key) )
             for name in value:
-                print name
-            print ''
+                print (name)
+            print ('')
         
-    print u'Test Complete'
+    print (u'Test Complete')
     
 
 # Run the script directly to test

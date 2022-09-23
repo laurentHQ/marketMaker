@@ -21,8 +21,8 @@ import copy
 from vnlog import vnLog
 from vtFunction import *
 
-DIRECTION_LONG = u'多'
-DIRECTION_SHORT = u'空'
+DIRECTION_LONG = u'buy'
+DIRECTION_SHORT = u'sell'
 
 
 ########################################################################
@@ -42,7 +42,7 @@ class MarketBalance(MMTemplate):
     bufferCount = 0 # Count of data that is currently cached
     highArray = np. zeros(bufferSize) # array of candlestick highs
     lowArray = np. zeros(bufferSize) # array of candlestick lows
-    closeArray = np. Zeros(bufferSize) # An array of candlestick closing prices
+    closeArray = np. zeros(bufferSize) # An array of candlestick closing prices
 
     orderList = [] # Saves a list of delegate codes
     EntryOrder = []
@@ -94,7 +94,7 @@ class MarketBalance(MMTemplate):
     # ----------------------------------------------------------------------
     def onInit(self):
         """Initialization policy (must be implemented by user inheritance)"""
-        self. writeCtaLog(u'%s policy initialization' % self.). name)
+        self. writeCtaLog(u'%s policy initialization' % self.name)
 
         # # Load historical data and initialize the policy value by means of playback calculation
         # initData = self.loadBar(self.initDays)
@@ -106,17 +106,17 @@ class MarketBalance(MMTemplate):
     # ----------------------------------------------------------------------
     def onStart(self):
         """Startup policy (must be implemented by user inheritance)"""
-        self. writeCtaLog(u'%s策略启动' % self. name)
+        self. writeCtaLog(u'The %s policy starts' % self. name)
         self. putEvent()
 
     # ----------------------------------------------------------------------
     def onStop(self):
         """Stop policy (must be implemented by user inheritance)"""
-        self. writeCtaLog(u'%s策略停止' % self. name)
+        self. writeCtaLog(u'The %s policy stops' % self. name)
         self. putEvent()
 
 
-    Market making strategy: According to the orderbook of okcoin, flexibly adjust the orderbook of zhcoin. The price is required to be consistent, and the amount of pending orders has a certain correlation
+    # Market making strategy: According to the orderbook of okcoin, flexibly adjust the orderbook of zhcoin. The price is required to be consistent, and the amount of pending orders has a certain correlation
     def onTick(self, tick):
         if 'OKCOIN' in tick. vtSymbol:
             def get_orderbook1():
@@ -212,16 +212,16 @@ class MarketBalance(MMTemplate):
             if not self. idOrderDict. has_key(order. vtOrderID):
                 self. idOrderDict[order. vtOrderID] = order
                 if order. status == STATUS_PENDING:
-                    print 'Queue List', order. vtOrderID
+                    print ('Queue List', order. vtOrderID)
                 else:
-                    print 'Partial Deal', order. vtOrderID
+                    print ('Partial Deal', order. vtOrderID)
         else:
             if order. vtOrderID in self. idOrderDict:
                 del self. idOrderDict[order. vtOrderID]
                 if order. status == STATUS_ALLTRADED:
-                    print 'All Deal', order. vtOrderID
+                    print ('All Deal', order. vtOrderID)
                 else:
-                    print 'Cancel All', order. vtOrderID
+                    print ('Cancel All', order. vtOrderID)
 
         price = priceUniform(order. price)
 
@@ -229,7 +229,7 @@ class MarketBalance(MMTemplate):
         if order. status in [STATUS_PARTTRADED, STATUS_PENDING]:
             if not self. priceOrderIdsDict. has_key(price):
                 self. priceOrderIdsDict[price] = []
-                print 'append ', price
+                print ('append ', price)
             orderList = self. priceOrderIdsDict[price]
             if orderList. count(order. vtOrderID) == 0:
                 orderList. append(order. vtOrderID)
@@ -241,7 +241,7 @@ class MarketBalance(MMTemplate):
                     orderList. remove(order. vtOrderID)
                 if len(orderList) == 0:
                     del self. priceOrderIdsDict[price]
-                    print 'del ', price
+                    print ('del ', price)
 
         self. orderUpdate = True
 
@@ -253,9 +253,9 @@ class MarketBalance(MMTemplate):
 
 if __name__ == '__main__':
     # Provides the function of direct double-click backtesting
-    The package for PyQt4 is imported to ensure that matplotlib uses PyQt4 instead of PySide, preventing initialization errors
+    #The package for PyQt4 is imported to ensure that matplotlib uses PyQt4 instead of PySide, preventing initialization errors
     from ctaBacktesting_tick import *
-    from PyQt4 import QtCore, QtGui
+    from PyQt5 import QtCore, QtGui
 
     # Create a backtest engine
     engine = BacktestingEngine()

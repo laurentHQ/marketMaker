@@ -30,7 +30,7 @@ class MainEngine(object):
         def print_log_err(event):
             class_data = event. dict_['data']. __dict__
             print(str(event. type_) + ": ")
-            print(json. dumps(class_data, encoding="UTF-8"))
+            print(json. dumps(class_data, ensure_ascii=False))
 
         # Create an event engine
         self. eventEngine = EventEngine2()
